@@ -1,0 +1,20 @@
+Basics of R: 
+
+📊 Basics of R Programming
+
+R is a powerful programming language widely used for data analysis, statistics, and data visualization. It is popular among data scientists, researchers, and analysts for handling and analyzing large datasets.
+
+🔹 Key Features of R:
+• Designed for statistical computing and data analysis
+• Supports data visualization using graphs and charts
+• Large collection of packages for analytics and machine learning
+• Open-source and widely used in research and industry
+
+🧠 Basic Concepts in R:
+• Variables and data types
+• Vectors, Lists, and Data Frames
+• Functions and operators
+• Data manipulation and analysis
+• Data visualization using plots
+
+R helps transform raw data into meaningful insights, making it an essential tool in Data Science and Analytics.
