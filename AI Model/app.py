@@ -12,7 +12,8 @@ app = Flask(__name__)
 
 print("🔥 Flask starting...")
 print("Loading model...")
-image_model = load_model("D:/update(27)/update(27)/AI Model/image_model.keras")
+# image_model = load_model("D:/update(27)/update(27)/AI Model/image_model.keras")
+image_model = load_model("D:/Final Project/uuzipped/ALLDONE/FINAL/ME WORKING/update(30)/AI Model/image_model.keras")
 print("Model loaded successfully ✅")
 
 # 🔹 Text model (UNCHANGED)
