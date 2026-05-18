@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: techvision-api
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
+    # Using Dockerfile in signup directory
+    dockerfile: ./signup/Dockerfile
+    buildCommand: cd signup && ./mvnw clean package -DskipTests
+    startCommand: java -jar signup/target/*.jar
+    plan: free
+    envVars:
+      # Database Configuration
+      - key: DATABASE_URL
+        value: ${DATABASE_URL}
+      - key: DATABASE_USERNAME
+        value: ${DATABASE_USERNAME}
+      - key: DATABASE_PASSWORD
+        value: ${DATABASE_PASSWORD}
+      
+      # Application Configuration
+      - key: PORT
+        value: "8080"
+      - key: JPA_DDL_AUTO
+        value: validate
+      
+      # API Keys
+      - key: GEMINI_API_KEY
+        value: ${GEMINI_API_KEY}
+      
+      # Email Configuration (Gmail)
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        value: ${MAIL_USERNAME}
+      - key: MAIL_PASSWORD
+        value: ${MAIL_PASSWORD}
+      
+      # OAuth Configuration (Optional)
+      - key: GOOGLE_CLIENT_ID
+        value: ${GOOGLE_CLIENT_ID}
+      - key: GOOGLE_CLIENT_SECRET
+        value: ${GOOGLE_CLIENT_SECRET}
+      - key: GITHUB_CLIENT_ID
+        value: ${GITHUB_CLIENT_ID}
+      - key: GITHUB_CLIENT_SECRET
+        value: ${GITHUB_CLIENT_SECRET}
+    
+    autoDeploy: true
+    preDeployCommand: ""
+    healthCheckPath: /api/auth/signup
