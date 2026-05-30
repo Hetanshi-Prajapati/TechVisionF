@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import pickle
 import base64
 import io
+import os
 from PIL import Image
 
 # 🔥 NEW (for image model)
@@ -10,15 +11,20 @@ import numpy as np
 
 app = Flask(__name__)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 print("🔥 Flask starting...")
 print("Loading model...")
 # image_model = load_model("D:/update(27)/update(27)/AI Model/image_model.keras")
-image_model = load_model("D:/Final Project/uuzipped/ALLDONE/FINAL/ME WORKING/update(30)/AI Model/image_model.keras")
+image_model = load_model(os.path.join(BASE_DIR, "image_model.keras"))
 print("Model loaded successfully ✅")
 
 # 🔹 Text model (UNCHANGED)
-model = pickle.load(open("model.pkl", "rb"))
-vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
+with open(os.path.join(BASE_DIR, "model.pkl"), "rb") as model_file:
+    model = pickle.load(model_file)
+
+with open(os.path.join(BASE_DIR, "vectorizer.pkl"), "rb") as vectorizer_file:
+    vectorizer = pickle.load(vectorizer_file)
 
 @app.route("/")
 def health():
@@ -182,4 +188,6 @@ def is_logo_like(image_bytes):
         return False
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    app.run(host=host, port=port)
