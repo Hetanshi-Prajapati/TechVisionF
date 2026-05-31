@@ -9,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Checkout signup repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'Hetanshi-Prajapati/TechNetwork'
+          path: 'signup'
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install flyctl
         run: curl -L https://fly.io/install.sh | sh
       - name: Check FLY token and flyctl
