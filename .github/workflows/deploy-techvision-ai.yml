@@ -11,6 +11,17 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install flyctl
         run: curl -L https://fly.io/install.sh | sh
+      - name: Check FLY token and flyctl
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          echo "FLY_API_TOKEN present: ${FLY_API_TOKEN:+yes}"
+          ~/.fly/bin/flyctl version || true
+          ~/.fly/bin/flyctl auth whoami || true
+          echo "--- AI Model directory listing ---"
+          ls -la "AI Model" || true
+          echo "--- AI Model/fly.toml ---"
+          if [ -f "AI Model/fly.toml" ]; then cat "AI Model/fly.toml"; else echo "no fly.toml"; fi
       - name: Deploy AI to Fly
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

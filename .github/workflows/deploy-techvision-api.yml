@@ -11,6 +11,17 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install flyctl
         run: curl -L https://fly.io/install.sh | sh
+      - name: Check FLY token and flyctl
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          echo "FLY_API_TOKEN present: ${FLY_API_TOKEN:+yes}"
+          ~/.fly/bin/flyctl version || true
+          ~/.fly/bin/flyctl auth whoami || true
+          echo "--- signup directory listing ---"
+          ls -la signup || true
+          echo "--- signup/fly.toml ---"
+          if [ -f signup/fly.toml ]; then cat signup/fly.toml; else echo "no fly.toml"; fi
       - name: Deploy API to Fly
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
