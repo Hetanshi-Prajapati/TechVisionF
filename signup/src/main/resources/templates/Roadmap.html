@@ -1,0 +1,6099 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guided Roadmap | TechVision</title>
+  <link rel="icon" type="image/jpeg" href="/images/LOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-page: #05070a;
+      --bg-body: #0a0c10;
+      --sidebar-bg: rgba(10, 12, 16, 0.9);
+      --primary-gradient: linear-gradient(135deg, #000000 0%, #1e40af 100%);
+      --card-bg: #161b22;
+      --card-border: rgba(48, 54, 61, 0.8);
+      --text-main: #e6edf3;
+      --text-muted: #7d8590;
+      --accent: #7bb8ff;
+      --danger: #f87171;
+      --success: #34d399;
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-body);
+      background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.02) 1px, transparent 0);
+      background-size: 40px 40px;
+      background-attachment: fixed;
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--card-border);
+      padding: 2rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 3rem;
+      text-decoration: none;
+      background: none;
+      box-shadow: none;
+      border: none;
+    }
+
+    .logo-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      box-shadow: none;
+      border: none;
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #EAEAEA;
+    }
+
+    .logo-img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+      background: none;
+      box-shadow: none;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: var(--primary-gradient);
+      opacity: 0;
+      z-index: -1;
+      transform: translateX(-20px);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .nav-link.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .nav-link:hover::before {
+      opacity: 0.15;
+      transform: translateX(0);
+    }
+
+    .nav-link.active::before {
+      display: none;
+    }
+
+    /* Enhanced Create Post Button in Sidebar */
+    .nav-link.create-post-nav {
+      margin-top: 1rem;
+      background: var(--primary-gradient);
+      color: white;
+      font-weight: 700;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .nav-link.create-post-nav svg {
+      stroke: white;
+      width: 22px;
+      height: 22px;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+    }
+
+    .nav-link.create-post-nav:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+      color: white;
+    }
+
+    .nav-link.create-post-nav:active {
+      transform: translateY(-1px);
+    }
+
+    .nav-link.create-post-nav::before {
+      display: none;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 2rem;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(30, 64, 175, 0.28), rgba(17, 24, 39, 0.95));
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+
+    /* Discovery Cards */
+    .discovery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+      align-items: start;
+    }
+
+    .discovery-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+      align-self: start;
+    }
+
+    .discovery-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .discovery-card h3 {
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .discovery-task {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .discovery-task.visible {
+      display: block !important;
+    }
+
+    .discovery-input {
+      width: 100%;
+      background: rgba(10, 12, 16, 0.82);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: white;
+      padding: 10px;
+      margin-top: 10px;
+      font-family: monospace;
+    }
+
+    .btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: var(--transition);
+    }
+
+    .btn:hover {
+      filter: brightness(1.2);
+    }
+
+    .btn-back {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3);
+      transition: var(--transition);
+      width: fit-content;
+    }
+
+    .btn-back:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(30, 64, 175, 0.5);
+      filter: brightness(1.1);
+    }
+
+    .selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .select-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+    }
+
+    .select-card:hover,
+    .select-card.active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .select-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(255, 255, 255, 0.02);
+      border-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+
+    .select-card.locked:hover {
+      background: rgba(255, 255, 255, 0.02);
+      border-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+
+    .roadmap-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .quiz-option {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .quiz-option:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .quiz-option.correct {
+      background: rgba(52, 211, 153, 0.2);
+      border-color: var(--success);
+    }
+
+    .quiz-option.incorrect {
+      background: rgba(248, 113, 113, 0.2);
+      border-color: var(--danger);
+    }
+
+    .upload-area {
+      border: 2px dashed var(--card-border);
+      padding: 2rem;
+      text-align: center;
+      border-radius: 12px;
+      margin-top: 1rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      background: var(--accent);
+      color: black;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    /* Create Post Modal Styles (copied from Home.html to ensure consistent centered modal) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+      transform: none !important;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 600px;
+      padding: 2.5rem;
+      position: relative;
+      box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.9);
+      animation: modalEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .modal-header { margin-bottom: 2rem; }
+
+    .modal-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      color: white;
+    }
+
+    .form-group { margin-bottom: 1.5rem; }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .modal-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 120px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .modal-textarea:focus {
+      border-color: var(--accent);
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    .modal-input {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: white;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .modal-input:focus {
+      border-color: var(--accent);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-select {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg-body);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: white;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+      appearance: none;
+    }
+
+    .modal-select option {
+      background: var(--bg-body);
+      color: white;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 2rem;
+    }
+
+    .btn-cancel {
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .btn-submit {
+      padding: 12px 32px;
+      border-radius: 12px;
+      background: var(--primary-gradient);
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3);
+      transition: var(--transition);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(30, 64, 175, 0.5);
+      filter: brightness(1.1);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .logout-button {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #f87171;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-top: auto;
+            border: 2px dashed rgba(248, 113, 113, 0.5);
+            background: rgba(248, 113, 113, 0.05);
+        }
+
+        .logout-button:hover {
+            border: 2px solid #f87171;
+            background: rgba(248, 113, 113, 0.1);
+            transform: translateX(5px);
+            color: #fca5a5;
+        }
+
+    @keyframes modalEntrance { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a href="/api/auth/home" class="logo-container">
+      <div class="logo-box">
+        <img src="/images/LOGO.png" alt="TechVision" style="height:70px;width:auto;object-fit:contain;vertical-align:middle;">
+      </div>
+      <span class="logo-text">TechVision</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="/api/auth/home" class="nav-link" id="homeLink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        </svg>
+        <span>Home</span>
+      </a>
+      <a href="/api/auth/explore" class="nav-link" id="exploreLink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Explore</span>
+      </a>
+      <a href="/api/auth/profile" class="nav-link" id="profileLink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Profile</span>
+      </a>
+      <a href="/my-five-year-plan" class="nav-link" id="fiveYearPlanLink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+          <path d="M8 2v4"></path>
+          <path d="M16 2v4"></path>
+          <path d="M3 10h18"></path>
+        </svg>
+        <span>My 5-Year Plan</span>
+      </a>
+      <a href="/roadmap" class="nav-link" id="roadmapLink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+        <span>Roadmap</span>
+      </a>
+      <a href="javascript:void(0)" onclick="openCreatePostModal()" class="nav-link create-post-nav" id="createPostLink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+        <span>Create Post</span>
+      </a>
+    </div>
+    
+    <a href="javascript:void(0)" onclick="openLogoutModal()" class="logout-button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+      </svg>
+      <span>Logout</span>
+    </a>
+  </nav>
+
+  <main class="main-content">
+    <!-- View 1: Initial Choice (Hidden/Removed) -->
+    <div id="viewInitial" style="display:none;">
+    </div>
+
+    <!-- View 2: Discovery System -->
+    <div id="viewDiscovery" style="display:none;">
+      <div class="hero">
+        <h1>Let's discover your interest</h1>
+        <p>Try these quick interactive tasks to see what fits you best.</p>
+      </div>
+
+      <div class="discovery-grid">
+        <!-- Card 1 -->
+        <div class="discovery-card" onclick="showDiscoveryTask('web')">
+          <h3>1. Try Web Development</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem">Build the visual part of websites.</p>
+          <div id="task-web" class="discovery-task" onclick="event.stopPropagation()">
+            <p>Write a simple HTML page with a heading and paragraph.</p>
+            <textarea class="discovery-input" id="input-web" rows="4" placeholder="<html>..."></textarea>
+            <button class="btn" onclick="checkDiscovery('web')">Submit</button>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="discovery-card" onclick="showDiscoveryTask('prog')">
+          <h3>2. Try Programming</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem">Handle logic, data, and backend.</p>
+          <div id="task-prog" class="discovery-task" onclick="event.stopPropagation()">
+            <p>Write output to print numbers: 1 2 3 4 5</p>
+            <input type="text" class="discovery-input" id="input-prog" placeholder="1 2 3 4 5">
+            <button class="btn" onclick="checkDiscovery('prog')">Submit</button>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="discovery-card" onclick="showDiscoveryTask('data')">
+          <h3>3. Try Data Analysis</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem">Find insights from information.</p>
+          <div id="task-data" class="discovery-task" onclick="event.stopPropagation()">
+            <p>You have a list of sales: [100, 200, 150]. Which value is highest?</p>
+            <div style="margin-top:10px;">
+              <label><input type="radio" name="data-ans" value="A"> A) 100</label><br>
+              <label><input type="radio" name="data-ans" value="B"> B) 200</label><br>
+              <label><input type="radio" name="data-ans" value="C"> C) 150</label>
+            </div>
+            <button class="btn" onclick="checkDiscovery('data')">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="discoveryResult"
+        style="display:none; margin-top:2rem; padding:1.5rem; background:rgba(52,211,153,0.1); border:1px solid var(--success); border-radius:12px; text-align:center;">
+        <h2 style="color:var(--success); margin-bottom:10px;">We recommend: <span id="recommendedDomain">Frontend</span>
+        </h2>
+        <button class="btn" onclick="startNormalFlow(true)">Proceed to Roadmap</button>
+      </div>
+    </div>
+
+    <!-- View 3: Normal Flow Selection -->
+    <div id="viewSelection" style="display:none;">
+      <div class="hero" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1>Customize Your Roadmap</h1>
+          <p>Select your preferred domain and language to begin.</p>
+        </div>
+        <button class="btn" onclick="startDiscovery()">Not sure what to choose?</button>
+      </div>
+
+      <div style="margin-bottom:2rem;">
+        <h3 style="margin-bottom:10px;">1. Select Domain</h3>
+        <div class="selection-grid" id="domainGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div style="margin-bottom:2rem; display:none;" id="languageSection">
+        <h3 style="margin-bottom:10px;">2. Select Language</h3>
+        <div class="selection-grid" id="languageGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- View 4: Roadmap Content -->
+    <div id="viewRoadmap" style="display:none;">
+      <button class="btn-back" onclick="goBackToSelection()">← Back</button>
+
+      <div id="languageProgressContainer" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--card-border);">
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+             <span style="font-weight:700; font-family:'Space Grotesk'; font-size: 1.2rem;">Course Progress</span>
+             <span id="languageStatus" style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">In Progress</span>
+         </div>
+         <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 10px; height: 12px; overflow: hidden;">
+             <div id="languageProgressBar" style="height: 100%; width: 0%; background: var(--success); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+         </div>
+         <div style="text-align:right; margin-top:8px; font-size:0.95rem; font-weight: 600; color:var(--text-muted);" id="languageProgressText">0% (0 / 0 tasks)</div>
+      </div>
+
+      <div class="hero" id="roadmapHero">
+        <h1 id="roadmapTitle">Week 1 - Roadmap Basics</h1>
+        <p id="roadmapSubtitle">Track | Language</p>
+      </div>
+
+      <div class="roadmap-content">
+        <h2 style="color:var(--accent); margin-bottom:1rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" style="vertical-align:bottom; margin-right:8px;">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg> Concept & Learn</h2>
+        <div id="roadmapConcepts" style="line-height:1.7; margin-bottom:2rem;"></div>
+
+        <h2 style="color:var(--accent); margin-bottom:1rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" style="vertical-align:bottom; margin-right:8px;">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg> Tasks</h2>
+        <div id="roadmapTasks"></div>
+
+        <div id="miniProjectSection"
+          style="margin-top:2rem; padding-top:2rem; border-top:1px solid var(--card-border);">
+          <h2 style="color:var(--accent); margin-bottom:1rem;"><svg width="24" height="24" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:bottom; margin-right:8px;">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg> Mini Project (Optional)</h2>
+          <div id="roadmapProject"></div>
+
+          <div class="upload-area">
+            <p style="margin-bottom:10px;">Upload proof (Screenshot, ZIP, Code) or paste GitHub Link</p>
+            <input type="file" id="proofFile" style="margin-bottom:10px;"><br>
+            <input type="text" id="proofLink" placeholder="https://github.com/..." class="discovery-input"
+              style="max-width:300px; margin-bottom:10px;"><br>
+            <button class="btn" onclick="submitProof()">Upload Proof</button>
+          </div>
+        </div>
+
+        <div id="quizSection" style="margin-top:2rem; padding-top:2rem; border-top:1px solid var(--card-border);">
+          <h2 style="color:var(--accent); margin-bottom:1rem;"><svg width="24" height="24" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:bottom; margin-right:8px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg> Quiz</h2>
+          <div id="roadmapQuiz"></div>
+        </div>
+        
+        <div id="courseLinkSection" style="margin-top:2rem; padding-top:2rem; border-top:1px solid var(--card-border); text-align:center; display:none;">
+          <h2 style="color:var(--accent); margin-bottom:1rem;">📚 Recommended Course</h2>
+          <p style="margin-bottom:1.5rem; color:var(--text-muted); font-size:1.05rem;">Deepen your knowledge by enrolling in a recommended course for this track.</p>
+          <a id="courseLinkBtn" href="#" target="_blank" class="btn" style="text-decoration:none; display:inline-block; font-size:1.1rem; padding: 12px 24px;">View Course <i class="fas fa-external-link-alt" style="margin-left:8px; font-size:0.9rem;"></i></a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script th:inline="none">
+    // Data Structures from specifications - STRICT domain-language mapping
+    const domains = {
+      "Frontend": [
+        { "name": "HTML", "category": "Foundation", "icon": "💼" },
+        { "name": "CSS", "category": "Foundation", "icon": "💼" },
+        { "name": "JavaScript", "category": "Foundation", "icon": "💼" },
+        { "name": "TypeScript", "category": "Recommended", "icon": "⭐" },
+        { "name": "React", "category": "Trending", "icon": "🔥" },
+        { "name": "Angular", "category": "Recommended", "icon": "⭐" },
+        { "name": "Vue", "category": "Foundation", "icon": "💼" }
+      ],
+      "Backend": [
+        { "name": "Java", "category": "Foundation", "icon": "💼" },
+        { "name": "Python", "category": "Recommended", "icon": "⭐" },
+        { "name": "Node.js", "category": "Trending", "icon": "🔥" },
+        { "name": "PHP", "category": "Foundation", "icon": "💼" },
+        { "name": "Spring Boot", "category": "Recommended", "icon": "⭐" },
+        { "name": "Django", "category": "Foundation", "icon": "💼" },
+        { "name": "Express", "category": "Foundation", "icon": "💼" }
+      ],
+      "AI": [
+        { "name": "Python", "category": "Foundation", "icon": "💼" },
+        { "name": "TensorFlow", "category": "Recommended", "icon": "⭐" },
+        { "name": "PyTorch", "category": "Trending", "icon": "🔥" },
+        { "name": "Keras", "category": "Foundation", "icon": "💼" }
+      ],
+      "Machine Learning": [
+        { "name": "Python", "category": "Foundation", "icon": "💼" },
+        { "name": "Scikit-learn", "category": "Recommended", "icon": "⭐" },
+        { "name": "TensorFlow", "category": "Trending", "icon": "🔥" },
+        { "name": "PyTorch", "category": "Foundation", "icon": "💼" }
+      ],
+      "Data Science": [
+        { "name": "Python", "category": "Foundation", "icon": "💼" },
+        { "name": "R", "category": "Recommended", "icon": "⭐" },
+        { "name": "Pandas", "category": "Foundation", "icon": "💼" },
+        { "name": "NumPy", "category": "Foundation", "icon": "💼" },
+        { "name": "Matplotlib", "category": "Trending", "icon": "🔥" }
+      ],
+      "Mobile": [
+        { "name": "Java", "category": "Foundation", "icon": "💼" },
+        { "name": "Kotlin", "category": "Recommended", "icon": "⭐" },
+        { "name": "Flutter", "category": "Trending", "icon": "🔥" },
+        { "name": "React Native", "category": "Recommended", "icon": "⭐" },
+        { "name": "Swift", "category": "Foundation", "icon": "💼" }
+      ],
+      "DevOps": [
+        { "name": "Docker", "category": "Foundation", "icon": "💼" },
+        { "name": "Kubernetes", "category": "Trending", "icon": "🔥" },
+        { "name": "Jenkins", "category": "Recommended", "icon": "⭐" },
+        { "name": "GitHub Actions", "category": "Foundation", "icon": "💼" }
+      ],
+      "Cloud": [
+        { "name": "AWS", "category": "Foundation", "icon": "💼" },
+        { "name": "Azure", "category": "Recommended", "icon": "⭐" },
+        { "name": "Google Cloud", "category": "Trending", "icon": "🔥" }
+      ],
+      "Security": [
+        { "name": "Kali Linux", "category": "Foundation", "icon": "💼" },
+        { "name": "Metasploit", "category": "Recommended", "icon": "⭐" },
+        { "name": "Burp Suite", "category": "Trending", "icon": "🔥" }
+      ]
+    };
+
+    const roadmapData = {
+  "Frontend": {
+    "HTML": {
+      "1": {
+        "title": "HTML Basics",
+        "concepts": "<b>What is HTML?</b><br>A core technology used in Frontend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is HTML",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure HTML.",
+            "example": "// Initialization for HTML\nstart_html();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello HTML!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'html';"
+          }
+        ],
+        "project": "Build a real-world application using HTML",
+        "quiz": [
+          {
+            "q": "What is the primary use of HTML?",
+            "options": [
+              "Database",
+              "Frontend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a HTML project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does HTML compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "CSS": {
+      "1": {
+        "title": "CSS Basics",
+        "concepts": "<b>What is CSS?</b><br>A core technology used in Frontend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is CSS",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure CSS.",
+            "example": "// Initialization for CSS\nstart_css();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello CSS!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'css';"
+          }
+        ],
+        "project": "Build a real-world application using CSS",
+        "quiz": [
+          {
+            "q": "What is the primary use of CSS?",
+            "options": [
+              "Database",
+              "Frontend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a CSS project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does CSS compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "JavaScript": {
+      "1": {
+        "title": "JavaScript Basics",
+        "concepts": "<b>What is JavaScript?</b><br>A core technology used in Frontend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is JavaScript",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure JavaScript.",
+            "example": "// Initialization for JavaScript\nstart_javascript();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello JavaScript!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'javascript';"
+          }
+        ],
+        "project": "Build a real-world application using JavaScript",
+        "quiz": [
+          {
+            "q": "What is the primary use of JavaScript?",
+            "options": [
+              "Database",
+              "Frontend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a JavaScript project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does JavaScript compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Angular": {
+      "1": {
+        "title": "Angular Basics",
+        "concepts": "<b>What is Angular?</b><br>A core technology used in Frontend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Angular",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Angular.",
+            "example": "// Initialization for Angular\nstart_angular();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Angular!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'angular';"
+          }
+        ],
+        "project": "Build a real-world application using Angular",
+        "quiz": [
+          {
+            "q": "What is the primary use of Angular?",
+            "options": [
+              "Database",
+              "Frontend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Angular project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Angular compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Vue": {
+      "1": {
+        "title": "Vue Basics",
+        "concepts": "<b>What is Vue?</b><br>A core technology used in Frontend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Vue",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Vue.",
+            "example": "// Initialization for Vue\nstart_vue();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Vue!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'vue';"
+          }
+        ],
+        "project": "Build a real-world application using Vue",
+        "quiz": [
+          {
+            "q": "What is the primary use of Vue?",
+            "options": [
+              "Database",
+              "Frontend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Vue project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Vue compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Next.js": {
+      "1": {
+        "title": "Next.js Basics",
+        "concepts": "<b>What is Next.js?</b><br>A React framework for production.<br><br><b>Pages & file-based routing</b><br>Routes are determined by files in the pages directory.<br><br><b>Server-Side Rendering (SSR) & Static Generation (SSG)</b><br>Pre-rendering methods for better performance.<br><br><b>API routes</b><br>Build backend endpoints within the app.<br><br><b>Linking pages</b><br>Use Link component for client-side navigation.",
+        "learn": [
+          "What is Next.js (React framework)",
+          "Pages & file-based routing",
+          "Server-Side Rendering (SSR)",
+          "Static Generation (SSG)",
+          "API routes",
+          "Linking pages"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create App",
+            "desc": "Create a new Next.js project.",
+            "example": "npx create-next-app my-app\ncd my-app\nnpm run dev"
+          },
+          {
+            "id": 2,
+            "title": "Create Page",
+            "desc": "Create about.js inside /pages and add content.",
+            "example": "export default function About() {\n  return <div>About Page</div>;\n}"
+          },
+          {
+            "id": 3,
+            "title": "Navigation",
+            "desc": "Use <Link> to move between pages.",
+            "example": "import Link from 'next/link';\n<Link href='/about'>About</Link>"
+          },
+          {
+            "id": 4,
+            "title": "Fetch Data",
+            "desc": "Use fetch() inside a component.",
+            "example": "const res = await fetch('/api/data');"
+          }
+        ],
+        "project": "Build a blog website",
+        "quiz": [
+          {
+            "q": "Next.js is mainly used for?",
+            "options": [
+              "Database",
+              "React-based framework",
+              "OS",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Routing in Next.js is based on?",
+            "options": [
+              "Manual routes",
+              "Pages folder",
+              "CSS",
+              "API"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "SSR means?",
+            "options": [
+              "Server Side Rendering",
+              "Static Script Run",
+              "Storage System",
+              "None"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Next.js improves?",
+            "options": [
+              "SEO",
+              "Database",
+              "Hardware",
+              "Security"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "API routes are used for?",
+            "options": [
+              "Styling",
+              "Backend logic inside app",
+              "UI",
+              "Animation"
+            ],
+            "ans": 1
+          }
+        ]
+      }
+    },
+    "TypeScript": {
+      "1": {
+        "title": "TypeScript Basics",
+        "concepts": "<b>What is TypeScript?</b><br>A typed superset of JavaScript.<br><br><b>Data types</b><br>Define variables as string, number, etc.<br><br><b>Interfaces</b><br>Define object structures.<br><br><b>Functions with types</b><br>Specify return types and argument types.<br><br><b>Type safety</b><br>Catch errors at compile time.",
+        "learn": [
+          "What is TypeScript",
+          "Data types (string, number)",
+          "Interfaces",
+          "Functions with types",
+          "Type safety"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Declare Variable",
+            "desc": "Declare a typed variable.",
+            "example": "let name: string = 'John';"
+          },
+          {
+            "id": 2,
+            "title": "Function",
+            "desc": "Create a typed function.",
+            "example": "function add(a:number,b:number){ return a+b; }"
+          },
+          {
+            "id": 3,
+            "title": "Interface",
+            "desc": "Define an interface.",
+            "example": "interface User { name:string; age:number; }"
+          }
+        ],
+        "project": "User form validation",
+        "quiz": [
+          {
+            "q": "TypeScript is?",
+            "options": [
+              "Database",
+              "Superset of JavaScript",
+              "OS",
+              "API"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Type helps in?",
+            "options": [
+              "Styling",
+              "Error checking",
+              "Hosting",
+              "Storage"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Interface is used for?",
+            "options": [
+              "UI",
+              "Structure definition",
+              "API",
+              "DB"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "TypeScript compiles to?",
+            "options": [
+              "Python",
+              "JavaScript",
+              "Java",
+              "HTML"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is valid type?",
+            "options": [
+              "string",
+              "color",
+              "style",
+              "route"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "React": {
+      "1": {
+        "title": "React Basics",
+        "concepts": "<b>What is React?</b><br>React is used to build UI using components.",
+        "learn": [
+          "Components",
+          "Props",
+          "State"
+        ],
+        "tasks": [
+          {
+            "id": 5,
+            "title": "Create Component",
+            "desc": "Make a basic React component",
+            "example": "function Button() { return <button>Click</button>; }"
+          },
+          {
+            "id": 6,
+            "title": "Manage State",
+            "desc": "Use useState",
+            "example": "const [count, setCount] = useState(0);"
+          }
+        ],
+        "project": "Counter App",
+        "quiz": [
+          {
+            "q": "React is used for?",
+            "options": [
+              "Backend",
+              "UI building",
+              "Database",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What is state?",
+            "options": [
+              "Data storage in component",
+              "Server",
+              "Database",
+              "HTML"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "What is JSX?",
+            "options": [
+              "JS XML",
+              "Java Syntax",
+              "JSON",
+              "JSP"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "React uses?",
+            "options": [
+              "Virtual DOM",
+              "Real DOM",
+              "Shadow DOM",
+              "None"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Props are?",
+            "options": [
+              "Component arguments",
+              "State",
+              "CSS",
+              "HTML"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "HTML/CSS/JS": {
+      "1": {
+        "title": "HTML, CSS, JS Basics",
+        "concepts": "<b>What is HTML?</b><br>HTML is used to structure web pages using elements like headings, images, and text.<br><br><b>What is CSS?</b><br>CSS is used to style web pages (colors, layout, spacing).<br><br><b>What is JavaScript?</b><br>JavaScript adds interactivity (clicks, dynamic content).",
+        "learn": [
+          "HTML tags (<h1>, <p>, <img>)",
+          "CSS basics (color, margin)",
+          "JS basics (variables, functions)"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create HTML Page",
+            "desc": "Create basic webpage. Steps: Create index.html, Add h1 and p.",
+            "example": "<html><body><h1>Hello</h1></body></html>"
+          },
+          {
+            "id": 2,
+            "title": "Add Image",
+            "desc": "Insert image",
+            "example": "<img src=\"image.jpg\">"
+          },
+          {
+            "id": 3,
+            "title": "Apply CSS",
+            "desc": "Style text",
+            "example": "h1 { color: blue; }"
+          },
+          {
+            "id": 4,
+            "title": "Add Button Click",
+            "desc": "Add JS alert",
+            "example": "<button onclick=\"alert('Hello')\">Click</button>"
+          }
+        ],
+        "project": "Build Portfolio Website. Include Name, Image, and Description.",
+        "quiz": [
+          {
+            "q": "What does HTML stand for?",
+            "options": [
+              "Hyper Trainer Marking Language",
+              "Hyper Text Markup Language",
+              "Hyper Text Marketing Language",
+              "High Text Machine Language"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which tag is used for images?",
+            "options": [
+              "<img>",
+              "<image>",
+              "<src>",
+              "<pic>"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "CSS is used for?",
+            "options": [
+              "Database",
+              "Styling",
+              "Server logic",
+              "API"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which keyword declares variable in JS?",
+            "options": [
+              "var / let / const",
+              "int",
+              "string",
+              "define"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which tag is for links?",
+            "options": [
+              "<a>",
+              "<link>",
+              "<href>",
+              "<src>"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "Backend": {
+    "Java": {
+      "1": {
+        "title": "Java Basics",
+        "concepts": "<b>What is Java?</b><br>A core technology used in Backend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Java",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Java.",
+            "example": "// Initialization for Java\nstart_java();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Java!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'java';"
+          }
+        ],
+        "project": "Build a real-world application using Java",
+        "quiz": [
+          {
+            "q": "What is the primary use of Java?",
+            "options": [
+              "Database",
+              "Backend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Java project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Java compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Python": {
+      "1": {
+        "title": "Python Basics",
+        "concepts": "<b>What is Python?</b><br>A core technology used in Backend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Python",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Python.",
+            "example": "// Initialization for Python\nstart_python();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Python!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'python';"
+          }
+        ],
+        "project": "Build a real-world application using Python",
+        "quiz": [
+          {
+            "q": "What is the primary use of Python?",
+            "options": [
+              "Database",
+              "Backend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Python project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Python compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "PHP": {
+      "1": {
+        "title": "PHP Basics",
+        "concepts": "<b>What is PHP?</b><br>A core technology used in Backend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is PHP",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure PHP.",
+            "example": "// Initialization for PHP\nstart_php();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello PHP!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'php';"
+          }
+        ],
+        "project": "Build a real-world application using PHP",
+        "quiz": [
+          {
+            "q": "What is the primary use of PHP?",
+            "options": [
+              "Database",
+              "Backend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a PHP project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does PHP compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Spring Boot": {
+      "1": {
+        "title": "Spring Boot Basics",
+        "concepts": "<b>What is Spring Boot?</b><br>A core technology used in Backend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Spring Boot",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Spring Boot.",
+            "example": "// Initialization for Spring Boot\nstart_spring_boot();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Spring Boot!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'spring-boot';"
+          }
+        ],
+        "project": "Build a real-world application using Spring Boot",
+        "quiz": [
+          {
+            "q": "What is the primary use of Spring Boot?",
+            "options": [
+              "Database",
+              "Backend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Spring Boot project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Spring Boot compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Django": {
+      "1": {
+        "title": "Django Basics",
+        "concepts": "<b>What is Django?</b><br>A core technology used in Backend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Django",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Django.",
+            "example": "// Initialization for Django\nstart_django();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Django!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'django';"
+          }
+        ],
+        "project": "Build a real-world application using Django",
+        "quiz": [
+          {
+            "q": "What is the primary use of Django?",
+            "options": [
+              "Database",
+              "Backend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Django project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Django compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Express": {
+      "1": {
+        "title": "Express Basics",
+        "concepts": "<b>What is Express?</b><br>A core technology used in Backend.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Express",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Express.",
+            "example": "// Initialization for Express\nstart_express();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Express!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'express';"
+          }
+        ],
+        "project": "Build a real-world application using Express",
+        "quiz": [
+          {
+            "q": "What is the primary use of Express?",
+            "options": [
+              "Database",
+              "Backend development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Express project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Express compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Python (Flask)": {
+      "1": {
+        "title": "Flask Basics",
+        "concepts": "<b>What is Flask?</b><br>A lightweight web framework for Python.<br><br><b>Create app</b><br>Initialize Flask application.<br><br><b>Routes</b><br>Map URLs to functions.<br><br><b>Request/Response</b><br>Handle incoming HTTP requests and return responses.<br><br><b>JSON response</b><br>Return data in JSON format for APIs.",
+        "learn": [
+          "What is Flask",
+          "Create app",
+          "Routes",
+          "Request/Response",
+          "JSON response"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create App",
+            "desc": "Initialize Flask.",
+            "example": "from flask import Flask\napp = Flask(__name__)"
+          },
+          {
+            "id": 2,
+            "title": "Route",
+            "desc": "Create a basic route.",
+            "example": "@app.route('/')\ndef home():\n    return 'Hello'"
+          },
+          {
+            "id": 3,
+            "title": "Run Server",
+            "desc": "Start the Flask server.",
+            "example": "app.run()"
+          },
+          {
+            "id": 4,
+            "title": "JSON API",
+            "desc": "Return JSON data.",
+            "example": "return {'msg': 'Hello'}"
+          }
+        ],
+        "project": "Simple REST API",
+        "quiz": [
+          {
+            "q": "Python is used in backend for?",
+            "options": [
+              "UI",
+              "APIs and server logic",
+              "Hardware",
+              "Design"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Flask is?",
+            "options": [
+              "Language",
+              "Framework",
+              "DB",
+              "OS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Route means?",
+            "options": [
+              "File",
+              "URL mapping",
+              "DB",
+              "UI"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "JSON is used for?",
+            "options": [
+              "Styling",
+              "Data transfer",
+              "Layout",
+              "OS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "app.run() does?",
+            "options": [
+              "Start server",
+              "Stop server",
+              "Delete app",
+              "Compile"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Go": {
+      "1": {
+        "title": "Go Basics",
+        "concepts": "<b>What is Go?</b><br>A compiled, fast language by Google.<br><br><b>Basic syntax</b><br>Variables, types, control structures.<br><br><b>Functions</b><br>Defining and calling functions.<br><br><b>HTTP server</b><br>Building web servers using net/http.",
+        "learn": [
+          "What is Go",
+          "Basic syntax",
+          "Functions",
+          "HTTP server"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Hello World",
+            "desc": "Print text to console.",
+            "example": "import \"fmt\"\nfmt.Println(\"Hello\")"
+          },
+          {
+            "id": 2,
+            "title": "Function",
+            "desc": "Create a simple function.",
+            "example": "func add(a int, b int) int {\n  return a + b\n}"
+          },
+          {
+            "id": 3,
+            "title": "HTTP Server",
+            "desc": "Start an HTTP server.",
+            "example": "http.ListenAndServe(\":8080\", nil)"
+          }
+        ],
+        "project": "Simple web server",
+        "quiz": [
+          {
+            "q": "Go is?",
+            "options": [
+              "Language",
+              "DB",
+              "API",
+              "UI"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Go is known for?",
+            "options": [
+              "Speed",
+              "Styling",
+              "Design",
+              "Animation"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Go is mainly used for?",
+            "options": [
+              "Backend systems",
+              "UI",
+              "DB",
+              "CSS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Go syntax is similar to?",
+            "options": [
+              "Python",
+              "C-like",
+              "HTML",
+              "CSS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Go server runs on?",
+            "options": [
+              "Port",
+              "UI",
+              "DB",
+              "File"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Node.js": {
+      "1": {
+        "title": "Backend Basics",
+        "concepts": "<b>What is Backend?</b><br>Handles server logic and data processing.<br><br><b>What is Node.js?</b><br>Allows JavaScript to run on server.",
+        "learn": [
+          "Server basics",
+          "Request/response"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create Server",
+            "desc": "Use http module",
+            "example": "const http = require('http');\nhttp.createServer((req,res)=>{\n res.write('Hello');\n res.end();\n}).listen(3000);"
+          }
+        ],
+        "project": "Simple API",
+        "quiz": [
+          {
+            "q": "Node.js runs on?",
+            "options": [
+              "Browser",
+              "Server",
+              "Database",
+              "OS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which module creates server?",
+            "options": [
+              "http",
+              "file",
+              "server",
+              "net"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Express is?",
+            "options": [
+              "Database",
+              "Framework",
+              "Language",
+              "OS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "API stands for?",
+            "options": [
+              "Application Programming Interface",
+              "App Process Integration",
+              "Advanced Programming Input",
+              "None"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which method sends response?",
+            "options": [
+              "res.send()",
+              "send()",
+              "output()",
+              "writeFile()"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "AI": {
+    "Keras": {
+      "1": {
+        "title": "Keras Basics",
+        "concepts": "<b>What is Keras?</b><br>A core technology used in AI.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Keras",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Keras.",
+            "example": "// Initialization for Keras\nstart_keras();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Keras!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'keras';"
+          }
+        ],
+        "project": "Build a real-world application using Keras",
+        "quiz": [
+          {
+            "q": "What is the primary use of Keras?",
+            "options": [
+              "Database",
+              "AI development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Keras project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Keras compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "TensorFlow": {
+      "1": {
+        "title": "TensorFlow Basics",
+        "concepts": "<b>What is TensorFlow?</b><br>A popular open-source library for ML/AI.<br><br><b>Tensors</b><br>Multi-dimensional arrays for data representation.<br><br><b>Models</b><br>Construct neural network layers.<br><br><b>Training</b><br>Fit the model to dataset.",
+        "learn": [
+          "What is TensorFlow",
+          "Tensors",
+          "Models",
+          "Training"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Import TensorFlow",
+            "desc": "Import the library.",
+            "example": "import tensorflow as tf"
+          },
+          {
+            "id": 2,
+            "title": "Create Tensor",
+            "desc": "Create a simple tensor.",
+            "example": "tensor = tf.constant([[1, 2], [3, 4]])"
+          },
+          {
+            "id": 3,
+            "title": "Train Model",
+            "desc": "Compile and fit a model.",
+            "example": "model.compile(optimizer='adam', loss='mse')\nmodel.fit(x_train, y_train, epochs=5)"
+          }
+        ],
+        "project": "Simple AI model",
+        "quiz": [
+          {
+            "q": "TensorFlow is?",
+            "options": [
+              "Game",
+              "ML library",
+              "OS",
+              "DB"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Tensor means?",
+            "options": [
+              "Data structure",
+              "UI",
+              "API",
+              "File"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "TensorFlow is used for?",
+            "options": [
+              "AI models",
+              "CSS",
+              "DB",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Model is used for?",
+            "options": [
+              "Prediction",
+              "UI",
+              "Storage",
+              "Layout"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Training means?",
+            "options": [
+              "Learning from data",
+              "Coding",
+              "Styling",
+              "Uploading"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "PyTorch": {
+      "1": {
+        "title": "PyTorch Basics",
+        "concepts": "<b>What is PyTorch?</b><br>ML framework popular in research.<br><br><b>Tensors</b><br>PyTorch data structures similar to NumPy.<br><br><b>Neural networks</b><br>Build layers and activation functions.",
+        "learn": [
+          "What is PyTorch",
+          "Tensors",
+          "Neural networks"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create Tensor",
+            "desc": "Create a PyTorch tensor.",
+            "example": "import torch\nx = torch.rand(5, 3)"
+          },
+          {
+            "id": 2,
+            "title": "Train Model",
+            "desc": "Basic training loop.",
+            "example": "optimizer.zero_grad()\nloss.backward()\noptimizer.step()"
+          }
+        ],
+        "project": "Basic neural network",
+        "quiz": [
+          {
+            "q": "PyTorch is?",
+            "options": [
+              "Framework for AI",
+              "OS",
+              "DB",
+              "UI"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "PyTorch is used for?",
+            "options": [
+              "Machine Learning",
+              "CSS",
+              "HTML",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Tensor in PyTorch is?",
+            "options": [
+              "Data object",
+              "UI",
+              "DB",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "PyTorch is popular for?",
+            "options": [
+              "Research",
+              "Styling",
+              "Hosting",
+              "Design"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Neural network is?",
+            "options": [
+              "Model",
+              "DB",
+              "UI",
+              "API"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Python": {
+      "1": {
+        "title": "Python Basics",
+        "concepts": "Python is a simple language used in AI and ML.",
+        "learn": [
+          "Variables",
+          "Loops",
+          "Conditions"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Print text",
+            "desc": "Print hello",
+            "example": "print('Hello')"
+          },
+          {
+            "id": 2,
+            "title": "Loop",
+            "desc": "Print numbers using loop",
+            "example": "for i in range(5):\n    print(i)"
+          }
+        ],
+        "project": "Calculator",
+        "quiz": [
+          {
+            "q": "Python is?",
+            "options": [
+              "Language",
+              "OS",
+              "Tool",
+              "Browser"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Print statement?",
+            "options": [
+              "print()",
+              "echo()",
+              "show()",
+              "log()"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which library is for data?",
+            "options": [
+              "Pandas",
+              "HTML",
+              "React",
+              "CSS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "AI means?",
+            "options": [
+              "Artificial Intelligence",
+              "Auto Input",
+              "Advanced Integration",
+              "None"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which is ML library?",
+            "options": [
+              "scikit-learn",
+              "Bootstrap",
+              "Express",
+              "Angular"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "Machine Learning": {
+    "TensorFlow": {
+      "1": {
+        "title": "TensorFlow Basics",
+        "concepts": "<b>What is TensorFlow?</b><br>A core technology used in Machine Learning.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is TensorFlow",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure TensorFlow.",
+            "example": "// Initialization for TensorFlow\nstart_tensorflow();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello TensorFlow!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'tensorflow';"
+          }
+        ],
+        "project": "Build a real-world application using TensorFlow",
+        "quiz": [
+          {
+            "q": "What is the primary use of TensorFlow?",
+            "options": [
+              "Database",
+              "Machine Learning development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a TensorFlow project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does TensorFlow compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "PyTorch": {
+      "1": {
+        "title": "PyTorch Basics",
+        "concepts": "<b>What is PyTorch?</b><br>A core technology used in Machine Learning.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is PyTorch",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure PyTorch.",
+            "example": "// Initialization for PyTorch\nstart_pytorch();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello PyTorch!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'pytorch';"
+          }
+        ],
+        "project": "Build a real-world application using PyTorch",
+        "quiz": [
+          {
+            "q": "What is the primary use of PyTorch?",
+            "options": [
+              "Database",
+              "Machine Learning development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a PyTorch project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does PyTorch compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Scikit-learn": {
+      "1": {
+        "title": "Scikit-learn Basics",
+        "concepts": "<b>What is sklearn?</b><br>A robust ML library in Python.<br><br><b>Models</b><br>Algorithms like Linear Regression, SVM, Random Forest.<br><br><b>Train/test</b><br>Split data to evaluate model performance.",
+        "learn": [
+          "What is sklearn",
+          "Models",
+          "Train/test"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Import sklearn",
+            "desc": "Import a model class.",
+            "example": "from sklearn.linear_model import LinearRegression"
+          },
+          {
+            "id": 2,
+            "title": "Train Model",
+            "desc": "Fit the model on data.",
+            "example": "model = LinearRegression()\nmodel.fit(X_train, y_train)"
+          }
+        ],
+        "project": "Prediction system",
+        "quiz": [
+          {
+            "q": "Scikit-learn is used for?",
+            "options": [
+              "UI",
+              "Machine Learning",
+              "DB",
+              "CSS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Model means?",
+            "options": [
+              "Algorithm",
+              "UI",
+              "API",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Training data is?",
+            "options": [
+              "Input data",
+              "CSS",
+              "API",
+              "Layout"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Prediction means?",
+            "options": [
+              "Output result",
+              "Styling",
+              "Design",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Sklearn is written in?",
+            "options": [
+              "Python",
+              "Java",
+              "C++",
+              "JS"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Python": {
+      "1": {
+        "title": "Intro to ML",
+        "concepts": "Machine learns from data.",
+        "learn": [
+          "Math basics",
+          "Algorithms",
+          "Training"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Train Model",
+            "desc": "Train basic ML model",
+            "example": "from sklearn.linear_model import LinearRegression\nmodel = LinearRegression()"
+          }
+        ],
+        "project": "Prediction system",
+        "quiz": [
+          {
+            "q": "ML is used for?",
+            "options": [
+              "Learning from data",
+              "Styling",
+              "Networking",
+              "Storage"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Regression is?",
+            "options": [
+              "Algorithm",
+              "UI",
+              "Server",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Dataset is?",
+            "options": [
+              "Collection of data",
+              "Code file",
+              "Server",
+              "UI"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Model is?",
+            "options": [
+              "Trained system",
+              "Image",
+              "API",
+              "Database"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Training means?",
+            "options": [
+              "Learning from data",
+              "Styling",
+              "Coding",
+              "Hosting"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "Data Science": {
+    "Pandas": {
+      "1": {
+        "title": "Pandas Basics",
+        "concepts": "<b>What is Pandas?</b><br>A core technology used in Data Science.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Pandas",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Pandas.",
+            "example": "// Initialization for Pandas\nstart_pandas();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Pandas!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'pandas';"
+          }
+        ],
+        "project": "Build a real-world application using Pandas",
+        "quiz": [
+          {
+            "q": "What is the primary use of Pandas?",
+            "options": [
+              "Database",
+              "Data Science development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Pandas project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Pandas compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "NumPy": {
+      "1": {
+        "title": "NumPy Basics",
+        "concepts": "<b>What is NumPy?</b><br>A core technology used in Data Science.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is NumPy",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure NumPy.",
+            "example": "// Initialization for NumPy\nstart_numpy();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello NumPy!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'numpy';"
+          }
+        ],
+        "project": "Build a real-world application using NumPy",
+        "quiz": [
+          {
+            "q": "What is the primary use of NumPy?",
+            "options": [
+              "Database",
+              "Data Science development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a NumPy project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does NumPy compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Matplotlib": {
+      "1": {
+        "title": "Matplotlib Basics",
+        "concepts": "<b>What is Matplotlib?</b><br>A core technology used in Data Science.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Matplotlib",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Matplotlib.",
+            "example": "// Initialization for Matplotlib\nstart_matplotlib();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Matplotlib!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'matplotlib';"
+          }
+        ],
+        "project": "Build a real-world application using Matplotlib",
+        "quiz": [
+          {
+            "q": "What is the primary use of Matplotlib?",
+            "options": [
+              "Database",
+              "Data Science development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Matplotlib project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Matplotlib compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "R": {
+      "1": {
+        "title": "R Basics",
+        "concepts": "<b>What is R?</b><br>A language tailored for statistical computing.<br><br><b>Data frames</b><br>Tables of data with rows and columns.<br><br><b>Visualization</b><br>Plotting graphs using libraries like ggplot2.",
+        "learn": [
+          "What is R",
+          "Data frames",
+          "Visualization"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Load dataset",
+            "desc": "Read a CSV file.",
+            "example": "data <- read.csv('data.csv')"
+          },
+          {
+            "id": 2,
+            "title": "Plot graph",
+            "desc": "Create a simple plot.",
+            "example": "plot(data$x, data$y)"
+          }
+        ],
+        "project": "Data analysis",
+        "quiz": [
+          {
+            "q": "R is used for?",
+            "options": [
+              "Data analysis",
+              "UI",
+              "DB",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Data frame is?",
+            "options": [
+              "Table of data",
+              "UI",
+              "API",
+              "CSS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Plot means?",
+            "options": [
+              "Graph",
+              "Code",
+              "API",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "R is mainly used by?",
+            "options": [
+              "Data scientists",
+              "Designers",
+              "Hackers",
+              "Gamers"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "R supports?",
+            "options": [
+              "Statistics",
+              "UI",
+              "CSS",
+              "HTML"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "SQL": {
+      "1": {
+        "title": "SQL Basics",
+        "concepts": "<b>What is SQL?</b><br>Structured Query Language for databases.<br><br><b>SELECT</b><br>Fetch specific columns.<br><br><b>WHERE</b><br>Filter rows based on conditions.<br><br><b>JOIN</b><br>Combine rows from multiple tables.",
+        "learn": [
+          "What is SQL",
+          "SELECT",
+          "WHERE",
+          "JOIN"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Query table",
+            "desc": "Select all data.",
+            "example": "SELECT * FROM users;"
+          },
+          {
+            "id": 2,
+            "title": "Filter Data",
+            "desc": "Use WHERE clause.",
+            "example": "SELECT name FROM users WHERE age > 18;"
+          }
+        ],
+        "project": "Database query system",
+        "quiz": [
+          {
+            "q": "SQL is used for?",
+            "options": [
+              "Styling",
+              "Database queries",
+              "UI",
+              "OS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "SELECT is used to?",
+            "options": [
+              "Insert",
+              "Fetch data",
+              "Delete",
+              "Update"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "WHERE is used for?",
+            "options": [
+              "Styling",
+              "Filtering data",
+              "UI",
+              "Layout"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "JOIN is used to?",
+            "options": [
+              "Combine tables",
+              "Style",
+              "Print",
+              "Delete"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Database stores?",
+            "options": [
+              "Data",
+              "UI",
+              "CSS",
+              "Code"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Python": {
+      "1": {
+        "title": "Data Science Basics",
+        "concepts": "Analyzing data for insights.",
+        "learn": [
+          "Load data",
+          "Visualize",
+          "Clean data"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Load Dataset",
+            "desc": "Load CSV file",
+            "example": "import pandas as pd\ndata = pd.read_csv('file.csv')"
+          }
+        ],
+        "project": "Data analysis",
+        "quiz": [
+          {
+            "q": "Data Science is?",
+            "options": [
+              "Data analysis",
+              "UI design",
+              "Backend",
+              "Network"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Pandas is used for?",
+            "options": [
+              "Data handling",
+              "Styling",
+              "Server",
+              "Security"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "CSV file is?",
+            "options": [
+              "Data file",
+              "Image",
+              "Code",
+              "App"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Visualization means?",
+            "options": [
+              "Graphs/charts",
+              "Coding",
+              "API",
+              "Storage"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which library for graphs?",
+            "options": [
+              "Matplotlib",
+              "React",
+              "Express",
+              "Docker"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "Mobile": {
+    "Java": {
+      "1": {
+        "title": "Java Basics",
+        "concepts": "<b>What is Java?</b><br>A core technology used in Mobile.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Java",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Java.",
+            "example": "// Initialization for Java\nstart_java();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Java!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'java';"
+          }
+        ],
+        "project": "Build a real-world application using Java",
+        "quiz": [
+          {
+            "q": "What is the primary use of Java?",
+            "options": [
+              "Database",
+              "Mobile development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Java project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Java compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Kotlin": {
+      "1": {
+        "title": "Kotlin Basics",
+        "concepts": "<b>What is Kotlin?</b><br>A core technology used in Mobile.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Kotlin",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Kotlin.",
+            "example": "// Initialization for Kotlin\nstart_kotlin();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Kotlin!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'kotlin';"
+          }
+        ],
+        "project": "Build a real-world application using Kotlin",
+        "quiz": [
+          {
+            "q": "What is the primary use of Kotlin?",
+            "options": [
+              "Database",
+              "Mobile development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Kotlin project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Kotlin compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Swift": {
+      "1": {
+        "title": "Swift Basics",
+        "concepts": "<b>What is Swift?</b><br>A core technology used in Mobile.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Swift",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Swift.",
+            "example": "// Initialization for Swift\nstart_swift();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Swift!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'swift';"
+          }
+        ],
+        "project": "Build a real-world application using Swift",
+        "quiz": [
+          {
+            "q": "What is the primary use of Swift?",
+            "options": [
+              "Database",
+              "Mobile development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Swift project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Swift compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "React Native": {
+      "1": {
+        "title": "React Native Basics",
+        "concepts": "<b>What is React Native?</b><br>Build mobile apps using React.<br><br><b>Components</b><br>Use View, Text, StyleSheet instead of div, p.<br><br><b>Navigation</b><br>Move between mobile screens.",
+        "learn": [
+          "What is React Native",
+          "Components",
+          "Navigation"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create app",
+            "desc": "Initialize a React Native app.",
+            "example": "npx react-native init MyApp"
+          },
+          {
+            "id": 2,
+            "title": "Add UI",
+            "desc": "Add a View and Text.",
+            "example": "import {View, Text} from 'react-native';\n<View><Text>Hello</Text></View>"
+          }
+        ],
+        "project": "Mobile app",
+        "quiz": [
+          {
+            "q": "React Native is used for?",
+            "options": [
+              "Web",
+              "Mobile apps",
+              "DB",
+              "OS"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "React Native uses?",
+            "options": [
+              "React",
+              "Angular",
+              "Python",
+              "SQL"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Component is?",
+            "options": [
+              "UI element",
+              "DB",
+              "API",
+              "File"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "React Native apps are?",
+            "options": [
+              "Cross-platform",
+              "Single platform",
+              "DB",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "RN uses which language?",
+            "options": [
+              "JavaScript",
+              "Java",
+              "Python",
+              "C++"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Flutter": {
+      "1": {
+        "title": "Flutter Basics",
+        "concepts": "Framework for mobile apps.",
+        "learn": [
+          "UI design",
+          "Navigation"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create UI",
+            "desc": "Create simple app screen",
+            "example": "Text('Hello App')"
+          }
+        ],
+        "project": "Build mobile app",
+        "quiz": [
+          {
+            "q": "Flutter is?",
+            "options": [
+              "Framework",
+              "Language",
+              "Database",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Language used in Flutter?",
+            "options": [
+              "Dart",
+              "Java",
+              "Python",
+              "JS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Widget means?",
+            "options": [
+              "UI component",
+              "API",
+              "Server",
+              "Data"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "AppBar is?",
+            "options": [
+              "Top bar",
+              "DB",
+              "API",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Scaffold is?",
+            "options": [
+              "Layout structure",
+              "Code",
+              "Server",
+              "Tool"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "DevOps": {
+    "Docker": {
+      "1": {
+        "title": "Docker Basics",
+        "concepts": "<b>What is Docker?</b><br>A core technology used in DevOps.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Docker",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Docker.",
+            "example": "// Initialization for Docker\nstart_docker();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Docker!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'docker';"
+          }
+        ],
+        "project": "Build a real-world application using Docker",
+        "quiz": [
+          {
+            "q": "What is the primary use of Docker?",
+            "options": [
+              "Database",
+              "DevOps development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Docker project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Docker compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Jenkins": {
+      "1": {
+        "title": "Jenkins Basics",
+        "concepts": "<b>What is Jenkins?</b><br>A core technology used in DevOps.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Jenkins",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Jenkins.",
+            "example": "// Initialization for Jenkins\nstart_jenkins();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Jenkins!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'jenkins';"
+          }
+        ],
+        "project": "Build a real-world application using Jenkins",
+        "quiz": [
+          {
+            "q": "What is the primary use of Jenkins?",
+            "options": [
+              "Database",
+              "DevOps development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Jenkins project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Jenkins compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "GitHub Actions": {
+      "1": {
+        "title": "GitHub Actions Basics",
+        "concepts": "<b>What is GitHub Actions?</b><br>A core technology used in DevOps.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is GitHub Actions",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure GitHub Actions.",
+            "example": "// Initialization for GitHub Actions\nstart_github_actions();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello GitHub Actions!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'github-actions';"
+          }
+        ],
+        "project": "Build a real-world application using GitHub Actions",
+        "quiz": [
+          {
+            "q": "What is the primary use of GitHub Actions?",
+            "options": [
+              "Database",
+              "DevOps development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a GitHub Actions project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does GitHub Actions compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Kubernetes": {
+      "1": {
+        "title": "Kubernetes Basics",
+        "concepts": "<b>What is Kubernetes?</b><br>Container orchestration system.<br><br><b>Pods</b><br>Smallest deployable units in K8s.<br><br><b>Deployment</b><br>Manage stateless applications.",
+        "learn": [
+          "What is Kubernetes",
+          "Pods",
+          "Deployment"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create pod",
+            "desc": "Run a simple pod.",
+            "example": "kubectl run nginx --image=nginx"
+          },
+          {
+            "id": 2,
+            "title": "Deploy app",
+            "desc": "Create a deployment.",
+            "example": "kubectl create deployment my-app --image=my-image"
+          }
+        ],
+        "project": "Deploy container",
+        "quiz": [
+          {
+            "q": "Kubernetes is?",
+            "options": [
+              "Container orchestrator",
+              "DB",
+              "UI",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Pod is?",
+            "options": [
+              "Group of containers",
+              "DB",
+              "UI",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Kubernetes works with?",
+            "options": [
+              "Docker",
+              "HTML",
+              "CSS",
+              "JS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Deployment means?",
+            "options": [
+              "App setup",
+              "Styling",
+              "Design",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Kubernetes is used for?",
+            "options": [
+              "Scaling apps",
+              "UI",
+              "CSS",
+              "DB"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Docker/Linux": {
+      "1": {
+        "title": "DevOps Basics",
+        "concepts": "Automation + deployment.",
+        "learn": [
+          "Linux commands",
+          "Docker setup"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Run Container",
+            "desc": "Run Docker container",
+            "example": "docker run hello-world"
+          }
+        ],
+        "project": "Deploy app",
+        "quiz": [
+          {
+            "q": "DevOps is?",
+            "options": [
+              "Development + Operations",
+              "UI",
+              "DB",
+              "Network"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Docker is?",
+            "options": [
+              "Container tool",
+              "Language",
+              "API",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Container is?",
+            "options": [
+              "Isolated app environment",
+              "UI",
+              "DB",
+              "Code"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Linux is?",
+            "options": [
+              "OS",
+              "API",
+              "DB",
+              "UI"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "CI/CD means?",
+            "options": [
+              "Continuous Integration/Deployment",
+              "Code Input",
+              "Server Process",
+              "None"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "Cloud": {
+    "Google Cloud": {
+      "1": {
+        "title": "Google Cloud Basics",
+        "concepts": "<b>What is Google Cloud?</b><br>A core technology used in Cloud.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Google Cloud",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Google Cloud.",
+            "example": "// Initialization for Google Cloud\nstart_google_cloud();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Google Cloud!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'google-cloud';"
+          }
+        ],
+        "project": "Build a real-world application using Google Cloud",
+        "quiz": [
+          {
+            "q": "What is the primary use of Google Cloud?",
+            "options": [
+              "Database",
+              "Cloud development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Google Cloud project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Google Cloud compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Azure": {
+      "1": {
+        "title": "Azure Basics",
+        "concepts": "<b>Cloud services</b><br>Computing over the internet.<br><br><b>VM</b><br>Virtual machines for compute power.<br><br><b>Storage</b><br>Blob storage for unstructured data.",
+        "learn": [
+          "Cloud services",
+          "VM",
+          "Storage"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create VM",
+            "desc": "Deploy a Virtual Machine in Azure portal.",
+            "example": "az vm create --name MyVM --resource-group MyGroup"
+          },
+          {
+            "id": 2,
+            "title": "Deploy app",
+            "desc": "Deploy an app using App Service.",
+            "example": "az webapp up --name MyApp"
+          }
+        ],
+        "project": "Cloud app",
+        "quiz": [
+          {
+            "q": "Azure is?",
+            "options": [
+              "Cloud platform",
+              "DB",
+              "UI",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Azure provides?",
+            "options": [
+              "Cloud services",
+              "CSS",
+              "UI",
+              "HTML"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "VM means?",
+            "options": [
+              "Virtual Machine",
+              "Visual Mode",
+              "Variable Model",
+              "None"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Azure is owned by?",
+            "options": [
+              "Microsoft",
+              "Google",
+              "Amazon",
+              "Meta"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Cloud is used for?",
+            "options": [
+              "Hosting apps",
+              "Styling",
+              "UI",
+              "DB"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "GCP": {
+      "1": {
+        "title": "GCP Basics",
+        "concepts": "<b>Cloud services</b><br>Computing over the internet.<br><br><b>VM</b><br>Compute Engine instances.<br><br><b>Storage</b><br>Google Cloud Storage buckets.",
+        "learn": [
+          "Cloud services",
+          "VM",
+          "Storage"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Create VM",
+            "desc": "Deploy a VM in Compute Engine.",
+            "example": "gcloud compute instances create my-vm"
+          },
+          {
+            "id": 2,
+            "title": "Deploy app",
+            "desc": "Deploy using App Engine or Cloud Run.",
+            "example": "gcloud run deploy"
+          }
+        ],
+        "project": "Cloud app",
+        "quiz": [
+          {
+            "q": "GCP is?",
+            "options": [
+              "Google Cloud Platform",
+              "DB",
+              "UI",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "GCP is used for?",
+            "options": [
+              "Cloud computing",
+              "CSS",
+              "UI",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "GCP is owned by?",
+            "options": [
+              "Google",
+              "Amazon",
+              "Microsoft",
+              "Apple"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Cloud storage means?",
+            "options": [
+              "Store data online",
+              "UI",
+              "CSS",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Deploy means?",
+            "options": [
+              "Run app online",
+              "Design",
+              "Style",
+              "Code"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "AWS": {
+      "1": {
+        "title": "Cloud Basics",
+        "concepts": "Run apps online.",
+        "learn": [
+          "EC2 setup",
+          "Storage"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Launch EC2",
+            "desc": "Create cloud server. Steps: Login AWS, Launch EC2."
+          }
+        ],
+        "project": "Deploy website",
+        "quiz": [
+          {
+            "q": "Cloud means?",
+            "options": [
+              "Remote servers",
+              "Local system",
+              "UI",
+              "Code"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "AWS is?",
+            "options": [
+              "Cloud platform",
+              "Language",
+              "DB",
+              "OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "EC2 is?",
+            "options": [
+              "Virtual server",
+              "UI",
+              "DB",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "S3 is?",
+            "options": [
+              "Storage service",
+              "Code",
+              "API",
+              "UI"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Deploy means?",
+            "options": [
+              "Launch app",
+              "Code",
+              "Design",
+              "Test"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  },
+  "Security": {
+    "Kali Linux": {
+      "1": {
+        "title": "Kali Linux Basics",
+        "concepts": "<b>What is Kali Linux?</b><br>A core technology used in Security.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Kali Linux",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Kali Linux.",
+            "example": "// Initialization for Kali Linux\nstart_kali_linux();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Kali Linux!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'kali-linux';"
+          }
+        ],
+        "project": "Build a real-world application using Kali Linux",
+        "quiz": [
+          {
+            "q": "What is the primary use of Kali Linux?",
+            "options": [
+              "Database",
+              "Security development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Kali Linux project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Kali Linux compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Metasploit": {
+      "1": {
+        "title": "Metasploit Basics",
+        "concepts": "<b>What is Metasploit?</b><br>A core technology used in Security.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Metasploit",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Metasploit.",
+            "example": "// Initialization for Metasploit\nstart_metasploit();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Metasploit!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'metasploit';"
+          }
+        ],
+        "project": "Build a real-world application using Metasploit",
+        "quiz": [
+          {
+            "q": "What is the primary use of Metasploit?",
+            "options": [
+              "Database",
+              "Security development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Metasploit project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Metasploit compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Burp Suite": {
+      "1": {
+        "title": "Burp Suite Basics",
+        "concepts": "<b>What is Burp Suite?</b><br>A core technology used in Security.<br><br><b>Syntax & Basics</b><br>Learn the foundational structure and usage.<br><br><b>Advanced Features</b><br>Master the advanced capabilities.<br><br><b>Best Practices</b><br>Write clean and efficient code.",
+        "learn": [
+          "What is Burp Suite",
+          "Basic concepts",
+          "Advanced usage",
+          "Best practices",
+          "Real-world application"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Setup Environment",
+            "desc": "Install and configure Burp Suite.",
+            "example": "// Initialization for Burp Suite\nstart_burp_suite();"
+          },
+          {
+            "id": 2,
+            "title": "First Project",
+            "desc": "Create your first basic script.",
+            "example": "console.log('Hello Burp Suite!');"
+          },
+          {
+            "id": 3,
+            "title": "Advanced Integration",
+            "desc": "Use advanced features.",
+            "example": "import { feature } from 'burp-suite';"
+          }
+        ],
+        "project": "Build a real-world application using Burp Suite",
+        "quiz": [
+          {
+            "q": "What is the primary use of Burp Suite?",
+            "options": [
+              "Database",
+              "Security development",
+              "Operating System",
+              "Networking"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "Which is a core feature?",
+            "options": [
+              "Syntax checking",
+              "Hardware control",
+              "Extensibility",
+              "RAM management"
+            ],
+            "ans": 2
+          },
+          {
+            "q": "How do you start a Burp Suite project?",
+            "options": [
+              "Initialize env",
+              "Buy a server",
+              "Write HTML",
+              "Compile OS"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Which of these is a best practice?",
+            "options": [
+              "Hardcode values",
+              "Write comments",
+              "Ignore errors",
+              "Skip tests"
+            ],
+            "ans": 1
+          },
+          {
+            "q": "What does Burp Suite compile or run on?",
+            "options": [
+              "Its specific runtime/engine",
+              "A toaster",
+              "Excel",
+              "Only Linux"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Ethical Hacking Tools": {
+      "1": {
+        "title": "Ethical Hacking Basics",
+        "concepts": "<b>Networking</b><br>Understand IP, TCP/UDP, and basic routing.<br><br><b>Security basics</b><br>Concepts of CIA triad and vulnerabilities.<br><br><b>Tools</b><br>Using Nmap, Kali Linux, Wireshark.",
+        "learn": [
+          "Networking",
+          "Security basics",
+          "Tools"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Scan network",
+            "desc": "Use Nmap to discover hosts.",
+            "example": "nmap -sn 192.168.1.0/24"
+          },
+          {
+            "id": 2,
+            "title": "Check ports",
+            "desc": "Scan specific open ports.",
+            "example": "nmap -p 80,443 target_ip"
+          }
+        ],
+        "project": "Security audit",
+        "quiz": [
+          {
+            "q": "Ethical hacking is?",
+            "options": [
+              "Legal security testing",
+              "Illegal hacking",
+              "UI",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Nmap is used for?",
+            "options": [
+              "Port scanning",
+              "Styling",
+              "UI",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Kali Linux is?",
+            "options": [
+              "Security OS",
+              "DB",
+              "UI",
+              "API"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Firewall is?",
+            "options": [
+              "Security system",
+              "UI",
+              "DB",
+              "Code"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Vulnerability means?",
+            "options": [
+              "Weakness in system",
+              "UI",
+              "CSS",
+              "DB"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    },
+    "Security Basics": {
+      "1": {
+        "title": "Security Basics",
+        "concepts": "Protect systems.",
+        "learn": [
+          "Networking basics",
+          "Linux tools"
+        ],
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Check Network",
+            "desc": "Use network command",
+            "example": "ping google.com"
+          }
+        ],
+        "project": "Security analysis",
+        "quiz": [
+          {
+            "q": "Security means?",
+            "options": [
+              "Protect systems",
+              "UI",
+              "Code",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Firewall is?",
+            "options": [
+              "Security system",
+              "UI",
+              "API",
+              "Code"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Virus is?",
+            "options": [
+              "Malware",
+              "UI",
+              "API",
+              "DB"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Encryption means?",
+            "options": [
+              "Protect data",
+              "Delete data",
+              "Store data",
+              "Show data"
+            ],
+            "ans": 0
+          },
+          {
+            "q": "Ethical hacking is?",
+            "options": [
+              "Testing security legally",
+              "Illegal hacking",
+              "Coding",
+              "UI"
+            ],
+            "ans": 0
+          }
+        ]
+      }
+    }
+  }
+};
+
+    let currentDomain = "";
+    let currentLanguage = "";
+    let currentWeek = 1;
+    let currentWeekData = null;
+    let authUserId = null;
+    let globalTasks = [];
+    let currentUserId = 'local';
+    let progressData = { completedTasks: [], quizScores: {} };
+
+    const courseLinks = {
+      
+      "Backend_Python": "https://www.coursera.org/learn/django-web-framework",
+      "Data Science_Python": "https://www.coursera.org/learn/python-data-analysis",
+      "AI_Python": "https://www.coursera.org/learn/python-for-applied-data-science-ai",
+      "Machine Learning_Python": "https://www.coursera.org/learn/machine-learning-with-python",
+      "Backend_Java": "https://www.coursera.org/learn/java-programming",
+      "Mobile_Java": "https://www.coursera.org/learn/android-app-development-with-java",
+      "Python": "https://www.coursera.org/learn/python",
+
+      "React": "https://www.codecademy.com/learn/react-101",
+      "Next.js": "https://nextjs.org/learn",
+      "TypeScript": "https://www.codecademy.com/learn/learn-typescript",
+      "HTML/CSS/JS": "https://www.freecodecamp.org/learn/responsive-web-design/",
+      "Python (Flask)": "https://www.udemy.com/course/rest-api-flask-and-python/",
+      "Go": "https://go.dev/tour/welcome/1",
+      "Node.js": "https://www.codecademy.com/learn/learn-node-js",
+      "TensorFlow": "https://www.coursera.org/learn/introduction-tensorflow",
+      "Scikit-learn": "https://www.coursera.org/learn/machine-learning",
+      "R": "https://www.coursera.org/learn/r-programming",
+      "SQL": "https://www.coursera.org/learn/sql-for-data-science",
+      "React Native": "https://www.codecademy.com/learn/learn-react-native",
+      "Flutter": "https://www.udemy.com/course/flutter-bootcamp-with-dart/",
+      "Kubernetes": "https://www.coursera.org/learn/google-kubernetes-engine",
+      "Docker/Linux": "https://www.coursera.org/learn/docker-essentials",
+      "GCP": "https://www.coursera.org/learn/gcp-fundamentals",
+      "Azure": "https://learn.microsoft.com/en-us/training/azure/",
+      "AWS": "https://www.coursera.org/learn/aws-cloud-practitioner-essentials",
+      "Ethical Hacking Tools": "https://www.coursera.org/learn/ethical-hacking-introduction",
+      "Security Basics": "https://www.coursera.org/learn/it-security-basics",
+
+      "HTML": "https://www.coursera.org/learn/html-css-javascript-for-web-developers",
+      "CSS": "https://www.coursera.org/learn/html-css-javascript-for-web-developers",
+      "JavaScript": "https://www.coursera.org/learn/javascript-basics",
+      "Angular": "https://www.coursera.org/learn/single-page-web-apps-with-angularjs",
+      "Vue": "https://www.coursera.org/courses?query=vue.js",
+      "Java": "https://www.coursera.org/learn/java-programming",
+      "PHP": "https://www.coursera.org/learn/web-applications-php",
+      "Spring Boot": "https://www.coursera.org/courses?query=spring%20boot",
+      "Django": "https://www.coursera.org/learn/django-web-framework",
+      "Express": "https://www.coursera.org/courses?query=express%20js",
+      "Keras": "https://www.coursera.org/courses?query=keras",
+      "PyTorch": "https://www.coursera.org/learn/deep-neural-networks-with-pytorch",
+      "Pandas": "https://www.coursera.org/learn/python-data-analysis",
+      "NumPy": "https://www.coursera.org/courses?query=numpy",
+      "Matplotlib": "https://www.coursera.org/courses?query=matplotlib",
+      "Kotlin": "https://www.coursera.org/learn/kotlin-for-java-developers",
+      "Swift": "https://www.coursera.org/learn/swift-programming",
+      "Docker": "https://www.coursera.org/learn/docker-essentials",
+      "Jenkins": "https://www.coursera.org/courses?query=jenkins",
+      "GitHub Actions": "https://www.coursera.org/courses?query=github%20actions",
+      "Google Cloud": "https://www.coursera.org/learn/gcp-fundamentals",
+      "Kali Linux": "https://www.coursera.org/courses?query=kali%20linux",
+      "Metasploit": "https://www.coursera.org/courses?query=metasploit",
+      "Burp Suite": "https://www.coursera.org/courses?query=burp%20suite"
+    };
+
+    function normalizeLanguageKey(value) {
+      return (value || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '');
+    }
+
+    function resolveRoadmapSelection(langParam, preferredDomain, savedLanguage) {
+      const target = normalizeLanguageKey(langParam || savedLanguage);
+      if (!target) return null;
+
+      const domainsToCheck = [];
+      if (preferredDomain && roadmapData[preferredDomain]) domainsToCheck.push(preferredDomain);
+      Object.keys(roadmapData).forEach(domain => {
+        if (domain !== preferredDomain) domainsToCheck.push(domain);
+      });
+
+      for (const domain of domainsToCheck) {
+        const languages = Object.keys(roadmapData[domain] || {});
+        const matchedLanguage = languages.find(language => normalizeLanguageKey(language) === target);
+        if (matchedLanguage) {
+          return { domain, language: matchedLanguage };
+        }
+      }
+
+      return null;
+    }
+
+    async function initializeCurrentUser() {
+      try {
+        const profRes = await fetch('/api/auth/users/me', { credentials: 'include' });
+        if (profRes.ok) {
+          const profile = await profRes.json();
+          currentUserId = profile.id || profile.username || 'local';
+          return;
+        }
+        window.location.href = '/api/auth/login';
+      } catch (e) {
+        window.location.href = '/api/auth/login';
+      }
+    }
+
+    function getProgressKey() { return `roadmap_${currentUserId}_${currentDomain}_${currentLanguage}`; }
+    
+    function getProgressKeyFor(domain, language) { return `roadmap_${currentUserId}_${domain}_${language}`; }
+
+    function getSelectedDomainKey() { return `selectedDomain_${currentUserId}`; }
+
+    function getSelectedLanguageKey() { return `selectedLanguage_${currentUserId}`; }
+
+    function getSelectedDomain() { return localStorage.getItem(getSelectedDomainKey()); }
+
+    function getSelectedLanguage() { return localStorage.getItem(getSelectedLanguageKey()); }
+
+    function setSelectedDomain(value) { localStorage.setItem(getSelectedDomainKey(), value); }
+
+    function setSelectedLanguage(value) { localStorage.setItem(getSelectedLanguageKey(), value); }
+
+    function getLanguageProgress(domain, language) {
+        const content = roadmapData[domain]?.[language] || {};
+      const backendTasks = globalTasks.filter(task => task.domain === domain && task.language === language);
+      const useBackendProgress = backendTasks.length > 0;
+
+      const saved = localStorage.getItem(getProgressKeyFor(domain, language));
+      const progData = saved ? JSON.parse(saved) : { completedTasks: [], quizScores: {} };
+
+        let totalItems = 0;
+        let completedItems = 0;
+
+        Object.keys(content).forEach(w => {
+           const weekData = content[w];
+           if (weekData.tasks) {
+               totalItems += weekData.tasks.length;
+               weekData.tasks.forEach(t => {
+             if (useBackendProgress) {
+               const matchedTask = backendTasks.find(task => task.week == w && task.taskType === 'TASK' && task.title === t.title);
+               if (matchedTask && matchedTask.completed) completedItems++;
+             } else if (progData.completedTasks.includes(t.title + '_' + w)) {
+               completedItems++;
+             }
+               });
+           }
+           if (weekData.quiz && weekData.quiz.length > 0) {
+               totalItems += 1;
+           if (useBackendProgress) {
+             const matchedQuiz = backendTasks.find(task => task.week == w && task.taskType === 'QUIZ');
+             if (matchedQuiz && matchedQuiz.quizScore !== null && matchedQuiz.quizScore !== undefined && matchedQuiz.quizScore >= 60) completedItems++;
+           } else if (progData.quizScores[w] !== undefined && progData.quizScores[w] >= 60) {
+             completedItems++;
+           }
+           }
+        });
+
+        return totalItems === 0 ? 0 : Math.round((completedItems / totalItems) * 100);
+    }
+
+    function loadProgress() {
+        const saved = localStorage.getItem(getProgressKey());
+        if (saved) {
+            progressData = JSON.parse(saved);
+        } else {
+            progressData = { completedTasks: [], quizScores: {} };
+        }
+    }
+
+    function saveProgress() {
+        localStorage.setItem(getProgressKey(), JSON.stringify(progressData));
+        updateProgressUI();
+    }
+
+    function updateProgressUI() {
+       const content = roadmapData[currentDomain]?.[currentLanguage] || {};
+       let totalItems = 0;
+       let completedItems = 0;
+
+       Object.keys(content).forEach(w => {
+           const weekData = content[w];
+           if (weekData.tasks) {
+               totalItems += weekData.tasks.length;
+               weekData.tasks.forEach(t => {
+                   if (progressData.completedTasks.includes(t.title + '_' + w)) completedItems++;
+               });
+           }
+             if (weekData.quiz && weekData.quiz.length > 0) {
+               totalItems += 1;
+               if (progressData.quizScores[w] !== undefined && progressData.quizScores[w] >= 60) completedItems++;
+             }
+       });
+
+       const percent = totalItems === 0 ? 0 : Math.round((completedItems / totalItems) * 100);
+
+       const bar = document.getElementById('languageProgressBar');
+       const text = document.getElementById('languageProgressText');
+       const statusEl = document.getElementById('languageStatus');
+
+       if(bar) bar.style.width = percent + '%';
+       if(text) text.textContent = `${percent}% (${completedItems} / ${totalItems} tasks)`;
+
+       if(statusEl) {
+           if (percent === 100 && totalItems > 0) {
+               statusEl.textContent = '✅ Completed';
+               statusEl.style.background = 'rgba(52, 211, 153, 0.2)';
+               statusEl.style.color = 'var(--success)';
+           } else {
+               statusEl.textContent = 'In Progress';
+               statusEl.style.background = 'rgba(59, 130, 246, 0.2)';
+               statusEl.style.color = 'var(--accent)';
+           }
+       }
+       
+       // Sync with Dynamic Plan
+       if (currentUserId !== 'local' && percent > 0) {
+            const csrfToken = document.querySelector('input[name="_csrf"]')?.value || '';
+            fetch('/api/five-year-plan/progress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                body: JSON.stringify({ userId: currentUserId, progress: percent }),
+                credentials: 'include'
+            }).catch(e => console.error("Failed to sync progress with plan", e));
+       }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const currentPath = window.location.pathname;
+      await initializeCurrentUser();
+      
+      // Update navigation active state
+      const homeLink = document.getElementById('homeLink');
+      const profileLink = document.getElementById('profileLink');
+      const exploreLink = document.getElementById('exploreLink');
+      const fiveYearPlanLink = document.getElementById('fiveYearPlanLink');
+      const roadmapLink = document.getElementById('roadmapLink');
+
+      // Remove active class from all nav links first
+      [homeLink, profileLink, exploreLink, fiveYearPlanLink, roadmapLink].forEach(link => {
+        if (link) link.classList.remove('active');
+      });
+
+      // Add active class to current page's nav link based on URL path
+      if (currentPath.includes('my-five-year-plan')) {
+        fiveYearPlanLink.classList.add('active');
+      } else if (currentPath.includes('roadmap')) {
+        roadmapLink.classList.add('active');
+      } else if (currentPath.includes('/profile')) {
+        profileLink.classList.add('active');
+      } else if (currentPath.includes('explore')) {
+        exploreLink.classList.add('active');
+      } else {
+        homeLink.classList.add('active');
+      }
+      
+      await loadAllBackendTasks();
+
+      if (currentPath === '/roadmap') {
+        const savedDomain = getSelectedDomain();
+        const savedLanguage = getSelectedLanguage();
+
+        if (savedDomain && domains[savedDomain]) {
+          currentDomain = savedDomain;
+        }
+
+        if (savedLanguage) {
+          const resolvedSaved = resolveRoadmapSelection(savedLanguage, currentDomain, savedLanguage);
+          currentLanguage = resolvedSaved ? resolvedSaved.language : savedLanguage;
+        }
+
+        // Show selection page and restore previous selections
+        startNormalFlow();
+
+        if (currentDomain) {
+          selectDomain(currentDomain);
+        }
+      } else if (currentPath === '/roadmap/details') {
+        // Resolve route language to actual roadmap data keys
+        const urlLanguage = new URLSearchParams(window.location.search).get('lang');
+        const savedLanguage = getSelectedLanguage();
+        const savedDomain = getSelectedDomain();
+        const resolved = resolveRoadmapSelection(urlLanguage, savedDomain, savedLanguage);
+        
+        if (resolved) {
+          currentLanguage = resolved.language;
+          currentDomain = resolved.domain;
+          setSelectedLanguage(currentLanguage);
+          setSelectedDomain(currentDomain);
+          loadProgress();
+          openWeek(1);
+        } else {
+          // No saved selections, redirect back to selection page
+          window.location.href = '/roadmap';
+        }
+      }
+    });
+
+    async function loadAllBackendTasks() {
+      try {
+        const res = await fetch(`/api/plan/tasks`, { credentials: 'include' });
+        if (res.ok) {
+          globalTasks = await res.json();
+        }
+      } catch (e) { }
+    }
+
+    function showView(viewId) {
+      ['viewInitial', 'viewDiscovery', 'viewSelection', 'viewRoadmap'].forEach(id => {
+        document.getElementById(id).style.display = (id === viewId) ? 'block' : 'none';
+      });
+    }
+
+    function startDiscovery() {
+      showView('viewDiscovery');
+    }
+
+    // Track which discovery task is currently expanded
+    let expandedDiscoveryTaskId = null;
+
+    function showDiscoveryTask(type) {
+      // If clicking the same task, toggle it closed
+      if (expandedDiscoveryTaskId === type) {
+        document.getElementById(`task-${type}`).classList.remove('visible');
+        expandedDiscoveryTaskId = null;
+      } else {
+        // First, remove 'visible' class from ALL discovery tasks
+        const allTasks = document.querySelectorAll('.discovery-task');
+        allTasks.forEach(task => {
+          task.classList.remove('visible');
+        });
+        
+        // Then add 'visible' class to only the clicked task
+        const selectedTask = document.getElementById(`task-${type}`);
+        if (selectedTask) {
+          selectedTask.classList.add('visible');
+        }
+        
+        // Update state to track which card is expanded
+        expandedDiscoveryTaskId = type;
+      }
+    }
+
+    function checkDiscovery(type) {
+      let passed = false;
+      if (type === 'web') {
+        const val = document.getElementById('input-web').value.toLowerCase();
+        passed = val.includes('<h1') && val.includes('<p');
+      } else if (type === 'prog') {
+        passed = document.getElementById('input-prog').value.trim() === '1 2 3 4 5';
+      } else if (type === 'data') {
+        const sel = document.querySelector('input[name="data-ans"]:checked');
+        passed = sel && sel.value === 'B';
+      }
+
+      if (passed) {
+        alert("Great job!");
+        localStorage.setItem(`interest_${type}`, 1);
+
+        let recommended = "Frontend";
+        if (type === 'prog') recommended = "Backend";
+        if (type === 'data') recommended = "Data Science";
+
+        document.getElementById('recommendedDomain').textContent = recommended;
+        document.getElementById('discoveryResult').style.display = 'block';
+      } else {
+        alert("Not quite right, try again!");
+      }
+    }
+
+    function startNormalFlow(fromDiscovery = false) {
+      showView('viewSelection');
+      renderDomains();
+      if (fromDiscovery) {
+        const rec = document.getElementById('recommendedDomain').textContent;
+        selectDomain(rec);
+      }
+    }
+
+    function renderDomains() {
+      const grid = document.getElementById('domainGrid');
+      grid.innerHTML = '';
+      Object.keys(domains).forEach(d => {
+        const div = document.createElement('div');
+        div.className = `select-card ${currentDomain === d ? 'active' : ''}`;
+        div.textContent = d;
+        div.onclick = () => selectDomain(d);
+        grid.appendChild(div);
+      });
+    }
+
+    function selectDomain(domain) {
+      currentDomain = domain;
+      setSelectedDomain(domain);
+      renderDomains();
+      document.getElementById('languageSection').style.display = 'block';
+
+      const grid = document.getElementById('languageGrid');
+      grid.innerHTML = '';
+      domains[domain].forEach(l => {
+        const percent = getLanguageProgress(domain, l.name);
+        
+        let statusHtml = '';
+        if (percent > 0 && percent < 100) {
+            statusHtml = `<div style="margin-top:8px; font-size:0.75rem; color:var(--accent); font-weight:600;"><i class="fas fa-spinner fa-spin" style="margin-right:4px;"></i> In Progress (${percent}%)</div>`;
+        } else if (percent === 100) {
+            statusHtml = `<div style="margin-top:8px; font-size:0.75rem; color:var(--success); font-weight:600;"><i class="fas fa-check-circle" style="margin-right:4px;"></i> Completed</div>`;
+        }
+
+        const div = document.createElement('div');
+        div.className = `select-card ${currentLanguage === l.name ? 'active' : ''}`;
+        div.dataset.lang = l.name;
+        div.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:5px;">${l.icon} ${l.category}</div><div style="font-size:1.1rem">${l.name}</div>${statusHtml}`;
+        div.onclick = () => goToRoadmap(l.name);
+        grid.appendChild(div);
+      });
+    }
+
+    function goToRoadmap(language) {
+      currentLanguage = language;
+
+      setSelectedDomain(currentDomain);
+      setSelectedLanguage(language);
+
+      const languageParam = normalizeLanguageKey(language);
+      window.location.href = '/roadmap/details?lang=' + languageParam;
+    }
+
+    function selectLanguage(language) {
+      goToRoadmap(language);
+    }
+
+    function goBackToSelection() {
+      window.location.href = '/roadmap';
+    }
+
+    function openWeek(week) {
+      currentWeek = parseInt(week);
+      showView('viewRoadmap');
+      loadWeekData();
+      updateProgressUI();
+
+      const link = courseLinks[`${currentDomain}_${currentLanguage}`] || courseLinks[currentLanguage];
+      if (link) {
+          document.getElementById('courseLinkSection').style.display = 'block';
+          document.getElementById('courseLinkBtn').href = link;
+      } else {
+          document.getElementById('courseLinkSection').style.display = 'none';
+      }
+    }
+
+    async function loadWeekData() {
+      const content = roadmapData[currentDomain]?.[currentLanguage]?.[currentWeek];
+      currentWeekData = content || null;
+      if (!content) return;
+
+      document.getElementById('roadmapTitle').textContent = `${content.title}`;
+      document.getElementById('roadmapSubtitle').textContent = `${currentDomain} | ${currentLanguage}`;
+
+      let conceptsHtml = `<p>${content.concepts}</p>`;
+      conceptsHtml += `<br><b>Topics to Learn:</b><ul>`;
+      content.learn.forEach(l => conceptsHtml += `<li style="margin-left:20px; color:var(--text-muted);">${l}</li>`);
+      conceptsHtml += `</ul>`;
+      document.getElementById('roadmapConcepts').innerHTML = conceptsHtml;
+
+      const tasksDiv = document.getElementById('roadmapTasks');
+      tasksDiv.innerHTML = '';
+      content.tasks.forEach(t => {
+        const isLocalCompleted = progressData.completedTasks.includes(t.title + '_' + currentWeek);
+        const backendTask = globalTasks.find(st => st.title === t.title && st.week == currentWeek && st.taskType === 'TASK');
+        const isCompleted = isLocalCompleted || (backendTask ? backendTask.completed : false);
+        const taskIdAttr = backendTask ? `data-taskid="${backendTask.id}"` : '';
+
+        tasksDiv.innerHTML += `
+                    <div class="task-item">
+                        <input type="checkbox" class="task-checkbox" ${taskIdAttr} data-title="${t.title}" data-desc="${t.desc}" ${isCompleted ? 'checked' : ''} onchange="toggleTask(this)">
+                        <div>
+                            <h4 style="font-size:1.1rem; margin-bottom:5px;">${t.title}</h4>
+                            <p style="color:var(--text-muted); font-size:0.95rem;">${t.desc}</p>
+                            ${t.example ? `<div style="background:rgba(0,0,0,0.3); padding:10px; margin-top:10px; border-radius:6px; font-family:monospace; font-size:0.85rem; color:#cfe1ff;">${t.example.replace(/</g, '&lt;')}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+      });
+
+      document.getElementById('roadmapProject').innerHTML = `<p>${content.project}</p>`;
+
+      const quizDiv = document.getElementById('roadmapQuiz');
+      quizDiv.innerHTML = '';
+      if (content.quiz) {
+        const quizAttempts = globalTasks
+          .filter(st => st.week == currentWeek && st.taskType === 'QUIZ')
+          .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        // Only consider a quiz as passed when its recorded quizScore is >= 60%
+        const passedQuiz = quizAttempts.find(st => (st.quizScore !== null && st.quizScore !== undefined && st.quizScore >= 60));
+        const latestQuizAttempt = quizAttempts[0] || null;
+        const localScore = progressData.quizScores[currentWeek];
+        const isCompleted = !!passedQuiz || (localScore !== undefined && localScore >= 60);
+        const displayScore = passedQuiz ? passedQuiz.quizScore : (localScore !== undefined ? localScore : (latestQuizAttempt ? latestQuizAttempt.quizScore : 0));
+
+        if (isCompleted) {
+          quizDiv.innerHTML = `<div style="padding:1.5rem; background:rgba(52,211,153,0.1); border:1px solid var(--success); border-radius:12px; text-align:center;">
+                        <h3 style="color:var(--success)">✅ You have already passed this quiz!</h3>
+                        <p style="margin-top:10px; font-size:1.2rem;">Score: <strong>${displayScore}%</strong></p>
+                    </div>`;
+        } else {
+          // if (latestQuizAttempt && latestQuizAttempt.quizScore !== null && latestQuizAttempt.quizScore !== undefined) {
+          //   quizDiv.innerHTML += `<div style="margin-bottom:1rem; padding:1rem; border-radius:10px; border:1px solid rgba(248,113,113,0.35); background:rgba(248,113,113,0.08); color:var(--text-main);">
+          //     <strong>Previous attempt:</strong> ${latestQuizAttempt.quizScore}% - Try again below.
+          //   </div>`;
+          // }
+          content.quiz.forEach((q, idx) => {
+            let html = `<div style="margin-bottom:1.5rem" class="quiz-question-block"><h4>Q${idx + 1}: ${q.q}</h4>`;
+            const labels = ['A)', 'B)', 'C)', 'D)'];
+            q.options.forEach((opt, oIdx) => {
+              html += `<div class="quiz-option" onclick="selectQuizOption(this, ${oIdx === q.ans})"><strong style="color:var(--accent); margin-right:8px;">${labels[oIdx] || ''}</strong> ${opt}</div>`;
+            });
+            html += `</div>`;
+            quizDiv.innerHTML += html;
+          });
+          quizDiv.innerHTML += `<div id="quizResult" style="display:none; margin-bottom:1.5rem; text-align:center;"></div>`;
+          quizDiv.innerHTML += `<button id="submitQuizBtn" class="btn" onclick="submitQuiz()">Submit Quiz</button>`;
+        }
+      } else {
+        quizDiv.innerHTML = `<p>No quiz for this week.</p>`;
+      }
+    }
+
+    async function toggleTask(checkbox) {
+      const title = checkbox.getAttribute('data-title');
+      const desc = checkbox.getAttribute('data-desc');
+      const taskId = checkbox.getAttribute('data-taskid');
+      const completed = checkbox.checked;
+
+      const taskKey = title + '_' + currentWeek;
+      if (completed) {
+         if (!progressData.completedTasks.includes(taskKey)) progressData.completedTasks.push(taskKey);
+      } else {
+         progressData.completedTasks = progressData.completedTasks.filter(x => x !== taskKey);
+      }
+      saveProgress();
+
+      try {
+        if (taskId) {
+          const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN'));
+          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+          await fetch(`/api/plan/task/${taskId}/complete`, { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken } });
+          let t = globalTasks.find(x => x.id == taskId);
+          if (t) t.completed = completed;
+        } else {
+          const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN'));
+          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+          const res = await fetch('/api/plan/task', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
+            body: JSON.stringify({
+              year: currentWeek,
+              domain: currentDomain,
+              language: currentLanguage,
+              week: currentWeek,
+              task: title,
+              title: title,
+              description: desc,
+              taskType: 'TASK',
+              completed: completed
+            })
+          });
+          if (res.ok) {
+            const saved = await res.json();
+            checkbox.setAttribute('data-taskid', saved.id);
+            globalTasks.push(saved);
+          }
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function selectQuizOption(el, isCorrect) {
+      const parent = el.parentElement;
+      Array.from(parent.children).forEach(c => {
+        if (c.classList.contains('quiz-option')) {
+          c.style.pointerEvents = 'none';
+          if (c === el) {
+            c.classList.add(isCorrect ? 'correct' : 'incorrect');
+          }
+        }
+      });
+      if (isCorrect) parent.dataset.correct = "1";
+    }
+
+    async function submitQuiz() {
+      let score = 0;
+      const qs = document.querySelectorAll('.quiz-question-block');
+      qs.forEach(q => {
+        if (q.dataset.correct === "1") score++;
+      });
+
+      const totalScore = Math.round((score / qs.length) * 100);
+      const resDiv = document.getElementById('quizResult');
+      resDiv.style.display = 'block';
+
+      if (totalScore >= 60) {
+         resDiv.innerHTML = `<div style="padding:1rem; background:rgba(52,211,153,0.1); border:1px solid var(--success); border-radius:8px; margin-bottom:1rem;">
+                                <h3 style="color:var(--success); margin-bottom:5px;">✅ Passed! Continue</h3>
+                                <p style="font-size:1.1rem;">Your Score: <strong>${score}/${qs.length}</strong></p>
+                             </div>`;
+        progressData.quizScores[currentWeek] = totalScore;
+         saveProgress();
+
+         const btn = document.getElementById('submitQuizBtn');
+         if(btn) {
+             btn.disabled = true;
+             btn.style.opacity = '0.5';
+             btn.textContent = 'Completed';
+             btn.style.cursor = 'not-allowed';
+         }
+
+         const nextWeek = currentWeek + 1;
+         const hasNextWeek = !!roadmapData[currentDomain]?.[currentLanguage]?.[nextWeek];
+         if (hasNextWeek) {
+             resDiv.innerHTML += `<button class="btn" style="margin-top:10px; background:var(--success); color:#fff;" onclick="openWeek(${nextWeek})">Start Week ${nextWeek} ➔</button>`;
+         } else {
+             resDiv.innerHTML += `<p style="margin-top:10px; color:var(--accent); font-weight:600; font-size:1.1rem;">🎉 You have completed all weeks for this track!</p>`;
+         }
+      } else {
+         resDiv.innerHTML = `<div style="padding:1rem; background:rgba(248,113,113,0.1); border:1px solid var(--danger); border-radius:8px; margin-bottom:1rem;">
+                                <h3 style="color:var(--danger); margin-bottom:5px;">❌ Try Again</h3>
+                                <p style="font-size:1.1rem;">Your Score: <strong>${score}/${qs.length}</strong></p>
+                             </div>`;
+         resDiv.innerHTML += `<button class="btn" style="margin-top:10px; background:var(--danger); color:#fff;" onclick="openWeek(${currentWeek})">Try Again</button>`;
+      }
+
+      try {
+          const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN'));
+          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+          const res = await fetch('/api/plan/quiz', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
+            body: JSON.stringify({
+              year: currentWeek,
+              week: parseInt(currentWeek),
+              score: totalScore,
+              domain: currentDomain,
+              language: currentLanguage,
+              task: `Quiz Result - Week ${currentWeek}`,
+              description: `Score: ${totalScore}%`,
+              quizQuestion: currentWeekData?.quiz?.[0]?.q || null,
+              optionA: currentWeekData?.quiz?.[0]?.options?.[0] || null,
+              optionB: currentWeekData?.quiz?.[0]?.options?.[1] || null,
+              optionC: currentWeekData?.quiz?.[0]?.options?.[2] || null,
+              optionD: currentWeekData?.quiz?.[0]?.options?.[3] || null
+            })
+          });
+          if (res.ok) {
+            const saved = await res.json();
+            globalTasks.push(saved);
+          }
+      } catch(e) { console.error("Failed to save quiz to backend", e); }
+    }
+
+    async function submitProof() {
+      const fileInput = document.getElementById('proofFile');
+      const linkInput = document.getElementById('proofLink') ? document.getElementById('proofLink').value : '';
+
+      if (!fileInput) {
+        showToast('Error: File input not found');
+        return;
+      }
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const maxSize = 10 * 1024 * 1024; // 10MB
+
+        // Validate file size
+        if (file.size > maxSize) {
+          showToast('File size exceeds 10MB limit');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          showToast('Uploading file...');
+          const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN'));
+          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+          const res = await fetch('/api/plan/upload', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'X-XSRF-TOKEN': csrfToken },
+            body: formData
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            showToast('✅ File uploaded successfully!');
+            console.log('Upload successful:', data.fileUrl);
+
+            // Clear file input after successful upload
+            fileInput.value = '';
+
+            // Store the proofUrl in a project task
+            await saveProjectProof(data.fileUrl);
+          } else {
+            const errData = await res.json().catch(() => ({}));
+            const errorMsg = errData.message || `Upload failed (${res.status})`;
+            showToast('❌ ' + errorMsg);
+            console.error('Upload error:', res.status, errData);
+          }
+        } catch (e) {
+          showToast('❌ Network error: ' + (e.message || 'Upload failed'));
+          console.error('Upload exception:', e);
+        }
+      } else if (linkInput && linkInput.trim()) {
+        try {
+          showToast('Saving link...');
+          await saveProjectProof(linkInput);
+          showToast('✅ Link saved successfully!');
+          
+          // Clear link input after successful save
+          document.getElementById('proofLink').value = '';
+        } catch (e) {
+          showToast('❌ Failed to save link');
+          console.error('Link save error:', e);
+        }
+      } else {
+        showToast('⚠️ Please select a file or enter a link');
+      }
+    }
+
+    async function saveProjectProof(url) {
+      // We create a PROJECT task type to store the proof
+      const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN'));
+      const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+      const res = await fetch('/api/plan/task', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
+        body: JSON.stringify({
+          year: currentWeek,
+          domain: currentDomain,
+          language: currentLanguage,
+          week: currentWeek,
+          task: "Mini Project Proof",
+          title: "Mini Project Proof",
+          description: `Proof uploaded: ${url}`,
+          taskType: 'PROJECT',
+          proofUrl: url,
+          completed: true
+        })
+      });
+      if (res.ok) {
+        globalTasks.push(await res.json());
+      }
+    }
+
+    // Logout functionality
+    function openLogoutModal() {
+      const modal = document.getElementById('logoutConfirmModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeLogoutModal() {
+      const modal = document.getElementById('logoutConfirmModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function confirmLogout() {
+      try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch (e) { console.error('Logout error:', e); }
+      try { localStorage.removeItem('user'); } catch (e) {}
+      try { localStorage.removeItem('selectedDomain'); } catch (e) {}
+      try { localStorage.removeItem('selectedLanguage'); } catch (e) {}
+      try { localStorage.removeItem(getSelectedDomainKey()); } catch (e) {}
+      try { localStorage.removeItem(getSelectedLanguageKey()); } catch (e) {}
+      try { localStorage.removeItem('token'); } catch (e) {}
+      try { sessionStorage.clear(); } catch (e) {}
+      localStorage.setItem('justLoggedOut', 'true');
+      setTimeout(() => { window.location.href = '/api/auth/login'; }, 200);
+    }
+  </script>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutConfirmModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:2000; justify-content:center; align-items:center;">
+    <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:2rem; max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,0.5); text-align:center;">
+      <h3 style="color:var(--text-main); margin-bottom:1rem; font-family:'Space Grotesk',sans-serif;">Confirm Logout</h3>
+      <p style="color:var(--text-muted); margin-bottom:2rem; line-height:1.6;">Are you sure you want to logout? You'll need to login again to access your account.</p>
+      <div style="display:flex; gap:1rem; justify-content:center;">
+        <button class="btn btn-secondary" onclick="closeLogoutModal()" style="flex:1;">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmLogout()" style="flex:1; background:var(--danger);">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" style="visibility:hidden; min-width:250px; margin-left:-125px; background-color:var(--card-bg); color:#fff; text-align:center; border-radius:8px; padding:16px; position:fixed; z-index:10000; left:50%; bottom:30px; font-size:14px; box-shadow:0 4px 12px rgba(0,0,0,0.5); border:1px solid var(--card-border); transition:opacity 0.5s, bottom 0.5s;">
+    <span id="toastMessage"></span>
+  </div>
+  <!-- Create Post Modal -->
+  <div class="modal-overlay" id="createPostModal" style="display:none;">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeCreatePostModal()">✕</button>
+      <div class="modal-header"><h2>Share an Insight</h2></div>
+      <div class="form-group">
+        <label>What's on your mind?</label>
+        <textarea id="postContent" class="modal-textarea" placeholder="Describe your thought or question..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Code Snippet (Optional)</label>
+        <textarea id="postCode" class="modal-textarea" style="font-family: monospace; min-height: 80px;" placeholder="Paste your code here..."></textarea>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="postCategory" class="modal-select">
+            <option value="general">General</option>
+            <option value="ai">AI</option>
+            <option value="ml">ML</option>
+            <option value="data">Data</option>
+            <option value="frontend">Frontend</option>
+            <option value="backend">Backend</option>
+            <option value="fullstack">Full Stack</option>
+            <option value="mobile">Mobile</option>
+            <option value="devops">DevOps</option>
+            <option value="security">Security</option>
+            <option value="cloud">Cloud</option>
+            <option value="gamedev">Game Development</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Image (URL or File)</label>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="postImageUrl" class="modal-input" placeholder="https://..." style="flex: 1;">
+            <span style="color: var(--text-muted); font-size: 0.8rem;">OR</span>
+            <input type="file" id="postImageFile" accept="image/*" style="display: none;" onchange="handleFileSelect(this)">
+            <button type="button" class="btn-cancel" onclick="document.getElementById('postImageFile').click()" style="padding: 8px 12px; font-size: 0.75rem; border-color: var(--accent); color: var(--accent);">
+              Upload
+            </button>
+          </div>
+          <div id="fileNameDisplay" style="font-size: 0.7rem; color: var(--accent); margin-top: 4px; display: none;"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Resource Link (Optional)</label>
+        <input type="text" id="postLinkUrl" class="modal-input" placeholder="https://github.com/...">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeCreatePostModal()">Cancel</button>
+        <button class="btn-submit" id="submitPostBtn" onclick="submitPost()">Post Insight</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toastMessage');
+      if (!toast || !msgEl) return;
+      msgEl.textContent = message;
+      toast.style.visibility = 'visible';
+      toast.style.opacity = '1';
+      toast.style.bottom = '50px';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.bottom = '30px';
+        setTimeout(() => { toast.style.visibility = 'hidden'; }, 500);
+      }, 3000);
+    }
+
+    function openCreatePostModal() {
+      const m = document.getElementById('createPostModal');
+      if (m) { m.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+      const createPostLink = document.getElementById('createPostLink'); if (createPostLink) createPostLink.classList.add('active');
+      console.log('[CreatePost] openCreatePostModal invoked on Roadmap');
+      const el = document.getElementById('postContent') || document.getElementById('content'); if (el) el.focus();
+    }
+
+    function closeCreatePostModal() {
+      const m = document.getElementById('createPostModal'); if (m) { m.style.display = 'none'; document.body.style.overflow = 'auto'; }
+      const createPostLink = document.getElementById('createPostLink'); if (createPostLink) createPostLink.classList.remove('active');
+      const safeClear = id => { const e = document.getElementById(id); if (e) e.value = ''; };
+      ['postContent','postCode','postImageUrl','postLinkUrl','postImageFile'].forEach(safeClear);
+      const fileDisplay = document.getElementById('fileNameDisplay'); if (fileDisplay) { fileDisplay.textContent = ''; fileDisplay.style.display = 'none'; }
+    }
+
+    function handleFileSelect(input) {
+      const fileDisplay = document.getElementById('fileNameDisplay');
+      if (!input || !input.files || !input.files[0]) { if (fileDisplay) fileDisplay.style.display = 'none'; return; }
+      const f = input.files[0]; if (fileDisplay) { fileDisplay.textContent = f.name; fileDisplay.style.display = 'block'; }
+      const urlInput = document.getElementById('postImageUrl'); if (urlInput) urlInput.value = '';
+    }
+
+    async function submitPost() {
+            console.log("submitPost triggered");
+
+            const content = document.getElementById('postContent')?.value.trim() || '';
+            const code = document.getElementById('postCode')?.value.trim() || '';
+            const category = document.getElementById('postCategory')?.value || 'general';
+            const imageUrl = document.getElementById('postImageUrl')?.value.trim() || '';
+            const linkUrl = document.getElementById('postLinkUrl')?.value.trim() || '';
+            
+            const btn = document.getElementById('submitPostBtn');
+            if (btn && btn.disabled) return;
+            
+            const fileInput = document.getElementById('postImageFile');
+
+            // Extract image and link values for console.log
+            const image = imageUrl || (fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0].name : null);
+            const link = linkUrl;
+
+            console.log("DATA BEING SENT:", {
+                content,
+                code,
+                category,
+                image,
+                link
+            });
+
+            if (!content && !code && !imageUrl && (!fileInput || !fileInput.files || !fileInput.files[0])) {
+                showToast('Please provide some content, code, or an image!');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = (fileInput && fileInput.files && fileInput.files[0]) ? 'Verifying post...' : 'Loading...';
+            }
+
+            const formData = new FormData();
+            formData.append('content', content);
+            formData.append('code', code);
+            formData.append('category', category);
+            formData.append('imageUrl', imageUrl);
+            formData.append('linkUrl', linkUrl);
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                formData.append('imageFile', fileInput.files[0]);
+            }
+
+            console.log("Sending data:", formData);
+
+            const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN'));
+            const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+
+            try {
+                const res = await fetch('/api/posts', {
+                    method: 'POST',
+                    credentials: "include",
+                    headers: {
+                        ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
+                    },
+                    body: formData
+                });
+
+                console.log("Status:", res.status);
+
+                if (res.ok) {
+                    closeCreatePostModal();
+                    showToast('Post created successfully!');
+                    if (typeof loadUserPosts === 'function') {
+                        loadUserPosts(typeof userIdParam !== 'undefined' && userIdParam ? userIdParam : (typeof currentUser !== 'undefined' ? currentUser.id : null));
+                    } else if (typeof loadPosts === 'function') {
+                        loadPosts(true);
+                    }
+                } else {
+                    const data = await res.json().catch(()=>({}));
+                    showToast(data.message || 'Failed to create post');
+                }
+            } catch (e) {
+                showToast('Connection error. Please try again.');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Post Insight';
+                }
+            }
+        }
+  </script>
+</body>
+
+</html>

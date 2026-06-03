@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: signup
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    buildCommand: mvn -DskipTests package
+    startCommand: java -jar target/signup-0.0.1-SNAPSHOT.jar
+    env:
+      - key: DATABASE_URL
+        fromDatabase: signup-db
+
+databases:
+  - name: signup-db
+    engine: postgresql
+    plan: starter
+services:
+  - type: web
+    name: signup
+    env: docker
+    plan: starter
+    autoDeploy: true
+    healthCheckPath: /

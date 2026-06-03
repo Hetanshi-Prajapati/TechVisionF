@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechVision | Connect, Collaborate, Code</title>
+    <link rel="icon" type="image/jpeg" href="/images/LOGO.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- ADVANCED BACKGROUND ANIMATIONS --- */
+        .canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(88, 166, 255, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            border-radius: 50%;
+            animation: float 20s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+
+        .glow2 {
+            background: radial-gradient(circle, rgba(35, 134, 54, 0.1) 0%, transparent 70%);
+            top: 40%;
+            left: 30%;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        .glow3 {
+            background: radial-gradient(circle, rgba(192, 132, 252, 0.12) 0%, transparent 70%);
+            top: 10%;
+            left: 70%;
+            animation-duration: 18s;
+            animation-delay: -2s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(100px, 50px) scale(1.1);
+            }
+
+            100% {
+                transform: translate(-50px, 100px) scale(0.9);
+            }
+        }
+
+        /* --- GLASS CARD DESIGN --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 20px;
+            perspective: 1000px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .glass-card {
+            width: 100%;
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 40px;
+            text-align: center;
+            transition: transform 0.2s ease-out;
+            transform-style: preserve-3d;
+            animation: cardEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(50px) rotateX(-10deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        /* --- TYPOGRAPHY --- */
+        /* --- HERO BRANDING --- */
+        .hero-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            animation: heroEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes heroEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-LOGO-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            box-shadow: none;
+            border: none;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .hero-LOGO-img {
+            height: clamp(60px, 8vw, 88px);
+            width: auto;
+            object-fit: contain;
+        }
+
+        .app-name {
+            font-size: clamp(32px, 8vw, 64px);
+            font-weight: 800;
+            margin-bottom: 0;
+            background: linear-gradient(135deg, #60a5fa, #c084fc, #f472b6, #60a5fa);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 8s linear infinite;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 300% center;
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .description {
+            font-size: 18px;
+            color: #94a3b8;
+            line-height: 1.8;
+            margin-bottom: 48px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- BUTTONS --- */
+        .button-group {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 18px 48px;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.2);
+            background: #f8fafc;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        /* --- FEATURES --- */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-top: 60px;
+            padding-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: center;
+        }
+
+        .feature-item {
+            flex: 1 1 240px;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .site-footer {
+            width: 100%;
+            padding: 18px 20px 24px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #e2e8f0;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: #60a5fa;
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 768px) {
+            .glass-card {
+                padding: 40px 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Particle Background -->
+    <canvas id="starField" class="canvas-bg"></canvas>
+
+    <div class="glow"></div>
+    <div class="glow glow2"></div>
+    <div class="glow glow3"></div>
+
+    <div class="container" id="tiltContainer">
+        <div class="glass-card" id="card">
+            <div class="hero-brand">
+                <div class="hero-LOGO-box">
+                    <img src="/images/LOGO.png" alt="TechVision Logo" class="hero-LOGO-img" style="vertical-align:middle;">
+                </div>
+                <h1 class="app-name">TechVision</h1>
+            </div>
+            <p class="subtitle">Connect, Collaborate, Code</p>
+            <p class="description">
+                Join a vibrant community of developers, share your projects, collaborate on open source,
+                and grow your skills together. Build connections that matter in the tech world.
+            </p>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="window.location.href='/api/auth/signup'">Sign Up</button>
+                <button class="btn btn-primary" onclick="window.location.href='/api/auth/login'">Login</button>
+            </div>
+
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">👥</div>
+                    <div class="feature-title">Connect</div>
+                    <div class="feature-desc">Build your professional network with developers worldwide</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💻</div>
+                    <div class="feature-title">Collaborate</div>
+                    <div class="feature-desc">Work together on exciting projects and share knowledge</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">Grow</div>
+                    <div class="feature-desc">Level up your skills with the community's support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="/api/auth/about">About Us</a>
+            <a href="/api/auth/contact">Contact Us</a>
+            <a href="/api/auth/terms">Terms</a>
+            <a href="/api/auth/privacy">Privacy</a>
+        </div>
+        <p>© 2026 TechVision. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // 1. Starfield Particle Background
+        const canvas = document.getElementById('starField');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speed = Math.random() * 0.5 + 0.1;
+                this.opacity = Math.random();
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < 0) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < 150; i++) stars.push(new Star());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => { resize(); initStars(); });
+        resize();
+        initStars();
+        animate();
+
+        // 2. 3D Tilt Effect on Mouse Move
+        const card = document.getElementById('card');
+        const container = document.getElementById('tiltContainer');
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 30;
+            const rotateY = (centerX - x) / 30;
+
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+            card.style.transition = 'transform 0.6s ease';
+        });
+
+        container.addEventListener('mouseenter', () => {
+            card.style.transition = 'none';
+        });
+
+        // 3. Staggered Entrance for Features
+        window.addEventListener('DOMContentLoaded', () => {
+            const features = document.querySelectorAll('.feature-item');
+            features.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 400 + (index * 150));
+            });
+        });
+    </script>
+</body>
+
+</html>

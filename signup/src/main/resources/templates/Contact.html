@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | TechVision</title>
+    <link rel="icon" type="image/jpeg" href="/images/LOGO.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #05070a 0%, #0f172a 100%);
+            color: #fff;
+            font-family: "Inter", sans-serif;
+        }
+
+        .page {
+            flex: 1;
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 64px 20px 40px;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        h1 { font-size: clamp(34px, 6vw, 56px); margin-bottom: 16px; }
+        p { color: #cbd5e1; line-height: 1.8; font-size: 17px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 28px;
+        }
+
+        .item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .item h2 { font-size: 18px; margin-bottom: 8px; }
+
+        .item a { color: #60a5fa; text-decoration: none; }
+
+        .site-footer {
+            width: 100%;
+            padding: 18px 20px 24px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #e2e8f0;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover { color: #60a5fa; }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            background: var(--primary);
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            filter: brightness(1.1);
+        }
+
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 3rem;
+            text-decoration: none;
+            background: none;
+            box-shadow: none;
+            border: none;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+        }
+
+        .logo-img {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+            background: none;
+            box-shadow: none;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #EAEAEA;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo-box">
+            <img src="/images/LOGO.png" alt="TechVision Logo" class="logo-img" style="height:70px;width:auto;object-fit:contain;vertical-align:middle;">
+            <!-- <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg> -->
+        </div>
+        <span class="logo-text">TechVision</span>
+    </div>
+    <nav class="navbar">
+        <!-- <a href="/api/auth/home" class="nav-brand">TechVision</a> -->
+        <div class="nav-links">
+            <a href="/api/auth/signup" class="nav-link">Signup</a>
+            <a href="/api/auth/login" class="nav-link">Login</a>
+            <!-- <button class="btn" onclick="window.location.href='/api/auth/home'">Back to Home</button> -->
+        </div>
+    </nav>
+    <main class="page">
+        <section class="card">
+            <h1>Contact Us</h1>
+            <p>If you need support, want to report an issue, or have a question about the platform, use one of the options below.</p>
+
+            <div class="grid">
+                <div class="item">
+                    <h2>Email</h2>
+                    <p><a href="mailto:support@techvision.local">support@techvision.local</a></p>
+                </div>
+                <div class="item">
+                    <h2>Response Time</h2>
+                    <p>Usually within 1-2 business days.</p>
+                </div>
+                <div class="item">
+                    <h2>Account Help</h2>
+                    <p>Use the login and reset pages if you need access help before contacting support.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="/api/auth/about">About Us</a>
+            <a href="/api/auth/contact">Contact Us</a>
+            <a href="/api/auth/terms">Terms</a>
+            <a href="/api/auth/privacy">Privacy</a>
+        </div>
+        <p>© 2026 TechVision. All rights reserved.</p>
+    </footer>
+</body>
+</html>

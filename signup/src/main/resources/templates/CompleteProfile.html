@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile | TechVision</title>
+    <link rel="icon" type="image/jpeg" href="/images/LOGO.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --card-bg: #161b22;
+            --card-border: rgba(48, 54, 61, 0.8);
+            --accent: #7bb8ff;
+            --text: #e6edf3;
+            --text-muted: #7d8590;
+            --gradient: linear-gradient(135deg, #000000 0%, #1e40af 100%);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.025) 1px, transparent 0);
+            background-size: 40px 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            padding: 2rem 1rem;
+        }
+
+        /* Glow blobs */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(30, 64, 175, 0.15), transparent 70%);
+            top: -100px;
+            left: -100px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 2.5rem 2.5rem 2rem;
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 3rem;
+            text-decoration: none;
+            background: none;
+            box-shadow: none;
+            border: none;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+        }
+
+        .logo-img {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+            background: none;
+            box-shadow: none;
+        }
+
+        .logo-box svg {
+            stroke: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #EAEAEA;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Avatar preview */
+        .avatar-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 1.8rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+        }
+
+        .avatar-preview {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: var(--gradient);
+            background-size: cover;
+            background-position: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .avatar-info {
+            flex: 1;
+        }
+
+        .avatar-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .avatar-email {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .required-star {
+            color: #f87171;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 3px rgba(123, 184, 255, 0.1);
+        }
+
+        select option {
+            background: #161b22;
+        }
+
+        .hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* Error msg */
+        .msg {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .msg.error {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            color: #f87171;
+        }
+
+        .msg.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+
+        /* Submit button */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.4);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.15);
+            box-shadow: 0 12px 28px rgba(30, 64, 175, 0.55);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 520px) {
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <script src="/js/csrf.js"></script>`r`n</head>
+
+<body>
+    <div class="card">
+        <!-- Logo -->
+        <div class="logo-container">
+            <div class="logo-box">
+                <img src="/images/LOGO.png" alt="TechVision Logo" class="logo-img" style="height:70px;width:auto;object-fit:contain;vertical-align:middle;">
+                <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg> -->
+            </div>
+            <span class="logo-text">TechVision</span>
+        </div>
+
+        <div class="badge">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+            </svg>
+            One-time Setup
+        </div>
+
+        <h1>Complete Your Profile</h1>
+        <p class="subtitle">You're almost in! Just fill in a few details to personalise your developer profile.</p>
+
+        <!-- Avatar / name preview -->
+        <div class="avatar-row">
+            <div class="avatar-preview" id="avatarPreview"></div>
+            <div class="avatar-info">
+                <div class="avatar-name" id="previewName">Loading...</div>
+                <div class="avatar-email" id="previewEmail"></div>
+            </div>
+        </div>
+
+        <div id="errorMsg" class="msg error"></div>
+        <div id="successMsg" class="msg success">Profile saved! Taking you to your feed...</div>
+
+        <form id="profileForm" onsubmit="submitProfile(event)" autocomplete="off">
+            <div class="form-grid">
+                <!-- Full Name -->
+                <div class="form-group full">
+                    <label>Full Name <span class="required-star">*</span></label>
+                    <input type="text" id="fullName" placeholder="e.g. Hetanshi Prajapati" required>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group full">
+                    <label>Username <span class="required-star">*</span></label>
+                    <input type="text" id="username" placeholder="e.g. hetanshi_dev" required autocomplete="off"
+                        spellcheck="false">
+                    <div class="hint">Only lowercase letters, numbers and underscores. Min 3 characters.</div>
+                </div>
+
+                <!-- Primary Skill -->
+                <div class="form-group full">
+                    <label>Primary Skill <span class="required-star">*</span></label>
+                    <select id="primarySkill" required>
+                        <option value="">Select your specialty...</option>
+                        <option value="frontend">Frontend</option>
+                        <option value="backend">Backend</option>
+                        <option value="fullstack">Full Stack</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="uiux">UI/UX Designer</option>
+                        <option value="devops">DevOps</option>
+                        <option value="datascience">DataScience</option>
+                        <option value="mobiledev">Mobile Developer</option>
+                        <option value="gamedev">Game Developer</option>
+                        <option value="aiml">AIML</option>
+                        <option value="cloud">Cloud</option>
+                        <option value="security">Security</option>
+                    </select>
+                </div>
+
+                <!-- GitHub Username -->
+                <div class="form-group full">
+                    <label>GitHub Username <span
+                            style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+                    <input type="text" id="githubUsername" placeholder="e.g. hetanshi-prajapati" autocomplete="off"
+                        spellcheck="false">
+                    <div class="hint">Leave blank if you don't have a GitHub account.</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Save &amp; Enter TechVision
+            </button>
+        </form>
+
+        <p class="footer-note">You can update these details anytime from your profile settings.</p>
+    </div>
+
+    <script>
+        let currentUser = {};
+
+        async function init() {
+            try {
+                const res = await fetch('/api/auth/users/me', { credentials: 'include' });
+                if (!res.ok) { window.location.replace('/login'); return; }
+                currentUser = await res.json();
+
+                // If already complete, go home
+                if (currentUser.profileComplete) {
+                    window.location.replace('/api/auth/home');
+                    return;
+                }
+
+                // Pre-fill fields from what OAuth gave us
+                document.getElementById('fullName').value = currentUser.fullName || '';
+                document.getElementById('username').value = currentUser.username || '';
+                document.getElementById('githubUsername').value = currentUser.githubUsername || '';
+
+                // Avatar / name preview
+                document.getElementById('previewName').textContent = currentUser.fullName || currentUser.username || 'New User';
+                document.getElementById('previewEmail').textContent = currentUser.email || '';
+
+                const pic = currentUser.profilePic || '';
+                const avatar = document.getElementById('avatarPreview');
+                if (pic) {
+                    avatar.style.backgroundImage = `url('${pic}')`;
+                } else {
+                    const seed = encodeURIComponent(currentUser.username || 'dev');
+                    avatar.style.backgroundImage = `url('https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}&backgroundColor=b6e3f4')`;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function submitProfile(e) {
+            e.preventDefault();
+            const urlParams = new URLSearchParams(window.location.search);
+            const logoutAfterComplete = urlParams.get('next') === 'login';
+            const errorEl = document.getElementById('errorMsg');
+            const successEl = document.getElementById('successMsg');
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const primarySkill = document.getElementById('primarySkill').value;
+            const githubUsername = document.getElementById('githubUsername').value.trim();
+
+            if (!fullName) { showError('Please enter your full name.'); return; }
+            if (!username || username.length < 3) { showError('Username must be at least 3 characters.'); return; }
+            if (!primarySkill) { showError('Please select your primary skill.'); return; }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Saving...`;
+
+            try {
+                const res = await fetch('/api/auth/complete-profile', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, username, primarySkill, githubUsername, logoutAfterComplete })
+                });
+
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showError(data.message || 'Something went wrong. Please try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Save &amp; Enter TechVision`;
+                    return;
+                }
+
+                successEl.style.display = 'block';
+                const nextUrl = data.next || '/api/auth/home';
+                setTimeout(() => window.location.replace(nextUrl), 1200);
+            } catch (err) {
+                showError('Connection error. Please try again.');
+                btn.disabled = false;
+                btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Save &amp; Enter TechVision`;
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Spinner keyframe
+        const style = document.createElement('style');
+        style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+        document.head.appendChild(style);
+
+        init();
+    </script>
+</body>
+
+</html>
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Spinner keyframe
+        const style = document.createElement('style');
+        style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+        document.head.appendChild(style);
+
+        init();
+    </script>
+</body>
+
+</html>
