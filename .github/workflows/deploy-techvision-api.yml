@@ -26,7 +26,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: |
-          ~/.fly/bin/flyctl status -a techvision-api >/dev/null 2>&1 || ~/.fly/bin/flyctl apps create techvision-api
+          ~/.fly/bin/flyctl status -a techvision-api >/dev/null 2>&1 || ~/.fly/bin/flyctl apps create techvision-api --org personal
       - name: Deploy API to Fly
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
